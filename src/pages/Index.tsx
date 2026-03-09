@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/hooks/use-toast";
@@ -52,20 +49,6 @@ const Index = () => {
     }
   };
 
-  // Mock data for initial layout
-  const mockResults = {
-    fitScore: 87,
-    fitSummary: "Excelente ajuste para el puesto. Tienes experiencia sólida en la mayoría de las áreas requeridas.",
-    missingSkills: ["React Native", "GraphQL", "Docker"],
-    payGapContext: "En México, las mujeres en roles de Frontend Developer ganan en promedio 15-20% menos que sus contrapartes masculinos. El rango salarial para este puesto debería estar entre $45,000 - $65,000 MXN mensuales.",
-    salaryNegotiationTips: [
-      "Enfatiza tu experiencia específica en React y TypeScript",
-      "Menciona proyectos exitosos donde hayas liderado implementaciones",
-      "Solicita una revisión salarial a los 6 meses con métricas claras"
-    ],
-    coverLetter: "Estimado equipo de contratación,\n\nMe emociona la oportunidad de contribuir como Frontend Developer. Mi experiencia de 4 años en React y mi pasión por crear interfaces accesibles me posicionan perfectamente para este rol...\n\n[Carta completa aquí]"
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -96,40 +79,6 @@ const Index = () => {
                 y obtén herramientas para negociar mejor.
               </p>
             </div>
-
-            {/* API Key Input */}
-            <Card className="border-2 border-accent/30 bg-accent/5">
-              <CardHeader>
-                <CardTitle className="text-accent-foreground flex items-center gap-2">
-                  <span className="text-2xl">🔐</span>
-                  API Key de Anthropic
-                </CardTitle>
-                <CardDescription>
-                  Ingresa tu API key de Anthropic para usar Claude. Puedes obtener una en{" "}
-                  <a 
-                    href="https://console.anthropic.com/account/keys" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    console.anthropic.com
-                  </a>
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <Label htmlFor="apiKey">Tu API Key (se mantiene privada en tu navegador)</Label>
-                  <Input
-                    id="apiKey"
-                    type="password"
-                    placeholder="sk-ant-api03-..."
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    className="font-mono"
-                  />
-                </div>
-              </CardContent>
-            </Card>
 
             {error && (
               <Alert variant="destructive">
@@ -189,14 +138,14 @@ const Index = () => {
                 {isAnalyzing ? (
                   <div className="flex items-center gap-2">
                     <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full"></div>
-                    Analizando con Claude...
+                    Analizando...
                   </div>
                 ) : (
                   "Analizar Fit y Brecha Salarial"
                 )}
               </Button>
               <p className="text-sm text-muted-foreground mt-2">
-                Análisis potenciado por Claude • Tu API key se mantiene privada
+                Análisis potenciado por IA
               </p>
             </div>
           </div>
@@ -220,27 +169,18 @@ const Index = () => {
 
             {results && (
               <div className="grid lg:grid-cols-3 gap-8">
-                {/* Fit Score */}
                 <div className="lg:col-span-1">
                   <FitScoreCard score={results.fitScore} summary={results.fitSummary} />
                 </div>
-
-                {/* Missing Skills */}
                 <div className="lg:col-span-2">
                   <MissingSkillsCard skills={results.missingSkills} />
                 </div>
-
-                {/* Pay Gap Context */}
                 <div className="lg:col-span-3">
                   <PayGapCard context={results.payGapContext} />
                 </div>
-
-                {/* Salary Negotiation Tips */}
                 <div className="lg:col-span-2">
                   <SalaryTipsCard tips={results.salaryNegotiationTips} />
                 </div>
-
-                {/* Cover Letter */}
                 <div className="lg:col-span-1">
                   <CoverLetterCard coverLetter={results.coverLetter} />
                 </div>
