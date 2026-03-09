@@ -25,14 +25,17 @@ const handler: Handler = async (event) => {
       }),
     });
     const data = await response.json();
-    return {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: data.content[0].text,
-    };
+   const rawText = data.content[0].text;
+const cleanJson = rawText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+return {
+  statusCode: 200,
+  headers: { "Content-Type": "application/json" },
+  body: cleanJson,
+};
   } catch (error) {
     return { statusCode: 500, body: JSON.stringify({ error: "Analysis failed" }) };
   }
 };
 
 export { handler };
+
