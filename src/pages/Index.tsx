@@ -183,7 +183,7 @@ const Index = () => {
             <div className="text-center">
               <Button
                 onClick={handleAnalyze}
-                disabled={!apiKey.trim() || !jobDescription.trim() || !cvText.trim() || isAnalyzing}
+                disabled={!jobDescription.trim() || !cvText.trim() || isAnalyzing}
                 className="px-12 py-3 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {isAnalyzing ? (
