@@ -47,6 +47,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // FairHire brand colors
+        "deep-purple": "hsl(var(--deep-purple))",
+        "electric-violet": "hsl(var(--electric-violet))",
+        "rose-gold": "hsl(var(--rose-gold))",
+        "off-white": "hsl(var(--off-white))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

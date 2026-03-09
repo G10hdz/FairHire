@@ -8,35 +8,42 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* FairHire Brand Colors - Light Mode Base */
+    --background: 252 100% 98%; /* off-white #faf5ff */
+    --foreground: 260 85% 15%; /* deep purple #1a0533 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 252 100% 98%;
+    --card-foreground: 260 85% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 252 100% 98%;
+    --popover-foreground: 260 85% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 260 75% 58%; /* electric violet #7c3aed */
+    --primary-foreground: 252 100% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 345 35% 80%; /* rose gold #e8b4b8 */
+    --secondary-foreground: 260 85% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 252 40% 94%;
+    --muted-foreground: 260 20% 55%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 345 35% 80%; /* rose gold */
+    --accent-foreground: 260 85% 15%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 252 100% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 260 20% 85%;
+    --input: 260 15% 92%;
+    --ring: 260 75% 58%;
 
     --radius: 0.5rem;
+    
+    /* FairHire Brand-specific tokens */
+    --deep-purple: 260 85% 15%; /* #1a0533 */
+    --electric-violet: 260 75% 58%; /* #7c3aed */
+    --rose-gold: 345 35% 80%; /* #e8b4b8 */
+    --off-white: 252 100% 98%; /* #faf5ff */
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +63,34 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* FairHire Dark Mode - Feminist tech aesthetic */
+    --background: 260 85% 15%; /* deep purple #1a0533 */
+    --foreground: 252 100% 98%; /* off-white */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 260 75% 20%; 
+    --card-foreground: 252 100% 98%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 260 85% 15%;
+    --popover-foreground: 252 100% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 260 75% 58%; /* electric violet */
+    --primary-foreground: 252 100% 98%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 345 35% 80%; /* rose gold */
+    --secondary-foreground: 260 85% 15%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 260 60% 25%;
+    --muted-foreground: 252 60% 75%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 345 35% 80%;
+    --accent-foreground: 260 85% 15%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 252 100% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 260 40% 30%;
+    --input: 260 40% 30%;
+    --ring: 260 75% 58%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
