@@ -201,7 +201,7 @@ const Index = () => {
               © 2024 Positronica Labs • FairHire
             </p>
             <a
-              href="https://www.linkedin.com/in/mayte-giovanna/"
+              href="https://www.linkedin.com/in/mayte-giovanna-hernandez-rios"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors hover:opacity-80"
