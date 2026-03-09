@@ -212,103 +212,50 @@ const Index = () => {
           </div>
         ) : (
           /* Results */
-          <div className="max-w-5xl mx-auto space-y-8">
+          <div className="max-w-6xl mx-auto space-y-8">
             <div className="text-center">
               <h2 className="text-3xl font-bold text-primary mb-2">Análisis Completado</h2>
               <Button
                 variant="outline"
-                onClick={() => setShowResults(false)}
+                onClick={() => {
+                  setShowResults(false);
+                  setResults(null);
+                  setError(null);
+                }}
                 className="text-sm"
               >
                 ← Nuevo análisis
               </Button>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Fit Score */}
-              <Card className="lg:col-span-1">
-                <CardHeader className="text-center">
-                  <CardTitle className="text-primary">Fit Score</CardTitle>
-                  <div className="text-6xl font-bold text-primary mt-4">
-                    {mockResults.fitScore}
-                  </div>
-                  <div className="text-muted-foreground">/ 100</div>
-                </CardHeader>
-                <CardContent>
-                  <Progress value={mockResults.fitScore} className="mb-4" />
-                  <p className="text-sm text-center">{mockResults.fitSummary}</p>
-                </CardContent>
-              </Card>
+            {results && (
+              <div className="grid lg:grid-cols-3 gap-8">
+                {/* Fit Score */}
+                <div className="lg:col-span-1">
+                  <FitScoreCard score={results.fitScore} summary={results.fitSummary} />
+                </div>
 
-              {/* Missing Skills */}
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle className="text-secondary-foreground">Habilidades a Desarrollar</CardTitle>
-                  <CardDescription>
-                    Estas skills te ayudarían a mejorar tu fit para el puesto
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {mockResults.missingSkills.map((skill) => (
-                      <Badge key={skill} variant="outline" className="border-secondary text-secondary-foreground">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                {/* Missing Skills */}
+                <div className="lg:col-span-2">
+                  <MissingSkillsCard skills={results.missingSkills} />
+                </div>
 
-              {/* Pay Gap Context */}
-              <Card className="lg:col-span-3 border-l-4 border-l-destructive">
-                <CardHeader>
-                  <CardTitle className="text-destructive-foreground">Contexto de Brecha Salarial</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm leading-relaxed">{mockResults.payGapContext}</p>
-                </CardContent>
-              </Card>
+                {/* Pay Gap Context */}
+                <div className="lg:col-span-3">
+                  <PayGapCard context={results.payGapContext} />
+                </div>
 
-              {/* Salary Negotiation Tips */}
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle className="text-primary">Tips de Negociación Salarial</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {mockResults.salaryNegotiationTips.map((tip, index) => (
-                    <div key={index} className="flex gap-3">
-                      <Badge className="shrink-0 w-6 h-6 rounded-full p-0 flex items-center justify-center">
-                        {index + 1}
-                      </Badge>
-                      <p className="text-sm">{tip}</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+                {/* Salary Negotiation Tips */}
+                <div className="lg:col-span-2">
+                  <SalaryTipsCard tips={results.salaryNegotiationTips} />
+                </div>
 
-              {/* Cover Letter */}
-              <Card className="lg:col-span-1">
-                <CardHeader>
-                  <CardTitle className="text-accent-foreground">Carta Personalizada</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="relative">
-                    <Textarea
-                      readOnly
-                      value={mockResults.coverLetter}
-                      className="min-h-[200px] text-sm"
-                    />
-                    <Button
-                      size="sm"
-                      className="absolute top-2 right-2"
-                      onClick={() => navigator.clipboard.writeText(mockResults.coverLetter)}
-                    >
-                      Copiar
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                {/* Cover Letter */}
+                <div className="lg:col-span-1">
+                  <CoverLetterCard coverLetter={results.coverLetter} />
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
