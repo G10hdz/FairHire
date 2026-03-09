@@ -18,7 +18,6 @@ import { CoverLetterCard } from "@/components/CoverLetterCard";
 import { AlertTriangle } from "lucide-react";
 
 const Index = () => {
-  const [apiKey, setApiKey] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [cvText, setCvText] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
