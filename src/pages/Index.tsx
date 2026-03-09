@@ -31,7 +31,7 @@ const Index = () => {
     setError(null);
     
     try {
-      const analysisResult = await analyzeJobFitWithClaude(jobDescription, cvText, apiKey);
+      const analysisResult = await analyzeJobFitWithClaude(jobDescription, cvText);
       setResults(analysisResult);
       setShowResults(true);
       toast({
