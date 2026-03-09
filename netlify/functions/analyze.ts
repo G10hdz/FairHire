@@ -20,4 +20,19 @@ const handler: Handler = async (event) => {
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
         max_tokens: 2000,
-        system: "You are FairHire, an AI career analyst focused on gend
+        system: "You are FairHire, an AI career analyst focused on gender equity. Analyze the Job Description and CV provided. Return ONLY a valid JSON object with: fitScore (number 0-100), fitSummary (2 sentences in Spanish), missingSkills (array of 3-5 gaps in Spanish), payGapContext (gender pay gap for this role in Mexico in Spanish), salaryNegotiationTips (array of 3 tips in Spanish), coverLetter (3-paragraph cover letter in Spanish). Return ONLY valid JSON, no markdown.",
+        messages: [{ role: "user", content: `Job Description:\n${jobDescription}\n\nCV:\n${cvText}` }],
+      }),
+    });
+    const data = await response.json();
+    return {
+      statusCode: 200,
+      headers: { "Content-Type": "application/json" },
+      body: data.content[0].text,
+    };
+  } catch (error) {
+    return { statusCode: 500, body: JSON.stringify({ error: "Analysis failed" }) };
+  }
+};
+
+export { handler };
