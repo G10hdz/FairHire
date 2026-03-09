@@ -1,5 +1,3 @@
-import { supabase } from "@/integrations/supabase/client";
-
 export interface AnalysisResult {
   fitScore: number;
   fitSummary: string;
@@ -13,30 +11,32 @@ export async function analyzeJobFitWithClaude(
   jobDescription: string,
   cvText: string
 ): Promise<AnalysisResult> {
-  const { data, error } = await supabase.functions.invoke("analyze", {
-    body: { jobDescription, cvText },
-  });
+  try {
+    const response = await fetch('/.netlify/functions/analyze', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ jobDescription, cvText }),
+    });
 
-  if (error) {
-    console.error("Edge function error:", error);
-    throw new Error(error.message || "Failed to analyze job fit");
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('API Error:', errorData);
+      throw new Error(`API Error: ${response.status} - ${errorData}`);
+    }
+
+    const result = await response.json();
+
+    if (!result.fitScore || !result.fitSummary || !result.missingSkills ||
+        !result.payGapContext || !result.salaryNegotiationTips || !result.coverLetter) {
+      throw new Error('Invalid response format from API');
+    }
+
+    return result;
+  } catch (error) {
+    console.error('API Error:', error);
+    if (error instanceof Error) throw error;
+    throw new Error('Failed to analyze job fit');
   }
-
-  if (data?.error) {
-    throw new Error(data.error);
-  }
-
-  // Validate required fields
-  if (
-    !data.fitScore ||
-    !data.fitSummary ||
-    !data.missingSkills ||
-    !data.payGapContext ||
-    !data.salaryNegotiationTips ||
-    !data.coverLetter
-  ) {
-    throw new Error("Invalid response format from API");
-  }
-
-  return data;
 }
