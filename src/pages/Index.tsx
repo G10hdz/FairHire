@@ -27,15 +27,6 @@ const Index = () => {
   const { toast } = useToast();
 
   const handleAnalyze = async () => {
-    if (!apiKey.trim()) {
-      toast({
-        title: "API Key requerida",
-        description: "Por favor ingresa tu API key de Anthropic.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsAnalyzing(true);
     setError(null);
     
