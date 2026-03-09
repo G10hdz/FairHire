@@ -27,13 +27,39 @@ const Index = () => {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
+    if (!apiKey.trim()) {
+      toast({
+        title: "API Key requerida",
+        description: "Por favor ingresa tu API key de Anthropic.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsAnalyzing(true);
-    // TODO: Implement Claude API call
-    setTimeout(() => {
-      setIsAnalyzing(false);
+    setError(null);
+    
+    try {
+      const analysisResult = await analyzeJobFitWithClaude(jobDescription, cvText, apiKey);
+      setResults(analysisResult);
       setShowResults(true);
-    }, 2000);
+      toast({
+        title: "¡Análisis completado!",
+        description: "Tu análisis de fit laboral está listo.",
+      });
+    } catch (error) {
+      console.error("Analysis error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+      setError(errorMessage);
+      toast({
+        title: "Error en el análisis",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   // Mock data for initial layout
