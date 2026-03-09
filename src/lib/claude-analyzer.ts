@@ -41,7 +41,7 @@ export async function analyzeJobFitWithClaude(
   const prompt = `Job Description:\n${jobDescription}\n\nCV:\n${cvText}`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://corsproxy.io/?https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
