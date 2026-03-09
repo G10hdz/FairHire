@@ -193,20 +193,20 @@ const Index = () => {
             <div className="text-center">
               <Button
                 onClick={handleAnalyze}
-                disabled={!jobDescription.trim() || !cvText.trim() || isAnalyzing}
+                disabled={!apiKey.trim() || !jobDescription.trim() || !cvText.trim() || isAnalyzing}
                 className="px-12 py-3 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {isAnalyzing ? (
                   <div className="flex items-center gap-2">
                     <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full"></div>
-                    Analizando...
+                    Analizando con Claude...
                   </div>
                 ) : (
                   "Analizar Fit y Brecha Salarial"
                 )}
               </Button>
               <p className="text-sm text-muted-foreground mt-2">
-                Análisis gratuito • Resultados en segundos • Sin registro requerido
+                Análisis potenciado por Claude • Tu API key se mantiene privada
               </p>
             </div>
           </div>
