@@ -18,10 +18,14 @@ import { CoverLetterCard } from "@/components/CoverLetterCard";
 import { AlertTriangle } from "lucide-react";
 
 const Index = () => {
+  const [apiKey, setApiKey] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [cvText, setCvText] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [results, setResults] = useState<AnalysisResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const handleAnalyze = () => {
     setIsAnalyzing(true);
