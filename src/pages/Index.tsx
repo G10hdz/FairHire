@@ -107,6 +107,47 @@ const Index = () => {
               </p>
             </div>
 
+            {/* API Key Input */}
+            <Card className="border-2 border-accent/30 bg-accent/5">
+              <CardHeader>
+                <CardTitle className="text-accent-foreground flex items-center gap-2">
+                  <span className="text-2xl">🔐</span>
+                  API Key de Anthropic
+                </CardTitle>
+                <CardDescription>
+                  Ingresa tu API key de Anthropic para usar Claude. Puedes obtener una en{" "}
+                  <a 
+                    href="https://console.anthropic.com/account/keys" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    console.anthropic.com
+                  </a>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <Label htmlFor="apiKey">Tu API Key (se mantiene privada en tu navegador)</Label>
+                  <Input
+                    id="apiKey"
+                    type="password"
+                    placeholder="sk-ant-api03-..."
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="font-mono"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {error && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
             <div className="grid md:grid-cols-2 gap-8">
               <Card className="border-2 border-primary/20 hover:border-primary/40 transition-colors">
                 <CardHeader>
