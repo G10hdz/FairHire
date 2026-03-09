@@ -1,24 +1,65 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
+import { analyzeJobFitWithClaude, type AnalysisResult } from "@/lib/claude-analyzer";
+import { FitScoreCard } from "@/components/FitScoreCard";
+import { MissingSkillsCard } from "@/components/MissingSkillsCard";
+import { PayGapCard } from "@/components/PayGapCard";
+import { SalaryTipsCard } from "@/components/SalaryTipsCard";
+import { CoverLetterCard } from "@/components/CoverLetterCard";
+import { AlertTriangle } from "lucide-react";
 
 const Index = () => {
+  const [apiKey, setApiKey] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [cvText, setCvText] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [results, setResults] = useState<AnalysisResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
+    if (!apiKey.trim()) {
+      toast({
+        title: "API Key requerida",
+        description: "Por favor ingresa tu API key de Anthropic.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsAnalyzing(true);
-    // TODO: Implement Claude API call
-    setTimeout(() => {
-      setIsAnalyzing(false);
+    setError(null);
+    
+    try {
+      const analysisResult = await analyzeJobFitWithClaude(jobDescription, cvText, apiKey);
+      setResults(analysisResult);
       setShowResults(true);
-    }, 2000);
+      toast({
+        title: "¡Análisis completado!",
+        description: "Tu análisis de fit laboral está listo.",
+      });
+    } catch (error) {
+      console.error("Analysis error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+      setError(errorMessage);
+      toast({
+        title: "Error en el análisis",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   // Mock data for initial layout
@@ -66,6 +107,47 @@ const Index = () => {
               </p>
             </div>
 
+            {/* API Key Input */}
+            <Card className="border-2 border-accent/30 bg-accent/5">
+              <CardHeader>
+                <CardTitle className="text-accent-foreground flex items-center gap-2">
+                  <span className="text-2xl">🔐</span>
+                  API Key de Anthropic
+                </CardTitle>
+                <CardDescription>
+                  Ingresa tu API key de Anthropic para usar Claude. Puedes obtener una en{" "}
+                  <a 
+                    href="https://console.anthropic.com/account/keys" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    console.anthropic.com
+                  </a>
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <Label htmlFor="apiKey">Tu API Key (se mantiene privada en tu navegador)</Label>
+                  <Input
+                    id="apiKey"
+                    type="password"
+                    placeholder="sk-ant-api03-..."
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    className="font-mono"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {error && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
             <div className="grid md:grid-cols-2 gap-8">
               <Card className="border-2 border-primary/20 hover:border-primary/40 transition-colors">
                 <CardHeader>
@@ -111,122 +193,69 @@ const Index = () => {
             <div className="text-center">
               <Button
                 onClick={handleAnalyze}
-                disabled={!jobDescription.trim() || !cvText.trim() || isAnalyzing}
+                disabled={!apiKey.trim() || !jobDescription.trim() || !cvText.trim() || isAnalyzing}
                 className="px-12 py-3 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 {isAnalyzing ? (
                   <div className="flex items-center gap-2">
                     <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full"></div>
-                    Analizando...
+                    Analizando con Claude...
                   </div>
                 ) : (
                   "Analizar Fit y Brecha Salarial"
                 )}
               </Button>
               <p className="text-sm text-muted-foreground mt-2">
-                Análisis gratuito • Resultados en segundos • Sin registro requerido
+                Análisis potenciado por Claude • Tu API key se mantiene privada
               </p>
             </div>
           </div>
         ) : (
           /* Results */
-          <div className="max-w-5xl mx-auto space-y-8">
+          <div className="max-w-6xl mx-auto space-y-8">
             <div className="text-center">
               <h2 className="text-3xl font-bold text-primary mb-2">Análisis Completado</h2>
               <Button
                 variant="outline"
-                onClick={() => setShowResults(false)}
+                onClick={() => {
+                  setShowResults(false);
+                  setResults(null);
+                  setError(null);
+                }}
                 className="text-sm"
               >
                 ← Nuevo análisis
               </Button>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Fit Score */}
-              <Card className="lg:col-span-1">
-                <CardHeader className="text-center">
-                  <CardTitle className="text-primary">Fit Score</CardTitle>
-                  <div className="text-6xl font-bold text-primary mt-4">
-                    {mockResults.fitScore}
-                  </div>
-                  <div className="text-muted-foreground">/ 100</div>
-                </CardHeader>
-                <CardContent>
-                  <Progress value={mockResults.fitScore} className="mb-4" />
-                  <p className="text-sm text-center">{mockResults.fitSummary}</p>
-                </CardContent>
-              </Card>
+            {results && (
+              <div className="grid lg:grid-cols-3 gap-8">
+                {/* Fit Score */}
+                <div className="lg:col-span-1">
+                  <FitScoreCard score={results.fitScore} summary={results.fitSummary} />
+                </div>
 
-              {/* Missing Skills */}
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle className="text-secondary-foreground">Habilidades a Desarrollar</CardTitle>
-                  <CardDescription>
-                    Estas skills te ayudarían a mejorar tu fit para el puesto
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {mockResults.missingSkills.map((skill) => (
-                      <Badge key={skill} variant="outline" className="border-secondary text-secondary-foreground">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                {/* Missing Skills */}
+                <div className="lg:col-span-2">
+                  <MissingSkillsCard skills={results.missingSkills} />
+                </div>
 
-              {/* Pay Gap Context */}
-              <Card className="lg:col-span-3 border-l-4 border-l-destructive">
-                <CardHeader>
-                  <CardTitle className="text-destructive-foreground">Contexto de Brecha Salarial</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm leading-relaxed">{mockResults.payGapContext}</p>
-                </CardContent>
-              </Card>
+                {/* Pay Gap Context */}
+                <div className="lg:col-span-3">
+                  <PayGapCard context={results.payGapContext} />
+                </div>
 
-              {/* Salary Negotiation Tips */}
-              <Card className="lg:col-span-2">
-                <CardHeader>
-                  <CardTitle className="text-primary">Tips de Negociación Salarial</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {mockResults.salaryNegotiationTips.map((tip, index) => (
-                    <div key={index} className="flex gap-3">
-                      <Badge className="shrink-0 w-6 h-6 rounded-full p-0 flex items-center justify-center">
-                        {index + 1}
-                      </Badge>
-                      <p className="text-sm">{tip}</p>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+                {/* Salary Negotiation Tips */}
+                <div className="lg:col-span-2">
+                  <SalaryTipsCard tips={results.salaryNegotiationTips} />
+                </div>
 
-              {/* Cover Letter */}
-              <Card className="lg:col-span-1">
-                <CardHeader>
-                  <CardTitle className="text-accent-foreground">Carta Personalizada</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="relative">
-                    <Textarea
-                      readOnly
-                      value={mockResults.coverLetter}
-                      className="min-h-[200px] text-sm"
-                    />
-                    <Button
-                      size="sm"
-                      className="absolute top-2 right-2"
-                      onClick={() => navigator.clipboard.writeText(mockResults.coverLetter)}
-                    >
-                      Copiar
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                {/* Cover Letter */}
+                <div className="lg:col-span-1">
+                  <CoverLetterCard coverLetter={results.coverLetter} />
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -244,6 +273,7 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      <Toaster />
     </div>
   );
 };
