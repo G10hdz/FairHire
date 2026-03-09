@@ -1,10 +1,21 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/hooks/use-toast";
+import { analyzeJobFitWithClaude, type AnalysisResult } from "@/lib/claude-analyzer";
+import { FitScoreCard } from "@/components/FitScoreCard";
+import { MissingSkillsCard } from "@/components/MissingSkillsCard";
+import { PayGapCard } from "@/components/PayGapCard";
+import { SalaryTipsCard } from "@/components/SalaryTipsCard";
+import { CoverLetterCard } from "@/components/CoverLetterCard";
+import { AlertTriangle } from "lucide-react";
 
 const Index = () => {
   const [jobDescription, setJobDescription] = useState("");
