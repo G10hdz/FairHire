@@ -273,6 +273,7 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      <Toaster />
     </div>
   );
 };
