@@ -1,73 +1,80 @@
-# Welcome to your Lovable project
+¡Claro que sí, Gio! Aquí tienes el `README.md` completo y actualizado en Markdown, listo para que lo copies y lo pegues.
 
-## Project info
+Lo redacté en español para que haga *match* perfecto con la audiencia de tu LinkedIn y de la comunidad SheBuilds, destacando tu solución técnica del proxy (que es un *flex* enorme para tu perfil de infraestructura cloud) y actualizando el modelo a Claude 3.5 Sonnet.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+Solo cópialo desde aquí:
 
-## How can I edit this code?
+```markdown
+# 💜 FairHire by Positronica Labs
 
-There are several ways of editing your application.
+![Deployed on Netlify](https://img.shields.io/badge/Deployed-Netlify-00C7B7?style=for-the-badge&logo=netlify)
+![Built with React](https://img.shields.io/badge/React-TypeScript-61DAFB?style=for-the-badge&logo=react)
+![Powered by Claude](https://img.shields.io/badge/AI-Claude_3.5_Sonnet-D97757?style=for-the-badge&logo=anthropic)
 
-**Use Lovable**
+**FairHire** es un analizador de *fit* laboral y brecha salarial de género impulsado por Inteligencia Artificial, diseñado específicamente para empoderar a las mujeres en México durante su búsqueda de empleo. 
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+Construido como el primer producto en producción para **Positronica Labs** durante el hackathon **SheBuilds on Lovable x 8M**.
 
-Changes made via Lovable will be committed automatically to this repo.
+🔗 **[Demo en Vivo](https://fairfit-ai.netlify.app)**
 
-**Use your preferred IDE**
+## 🎯 ¿Qué hace?
+Las usuarias simplemente pegan la descripción de una vacante y el texto de su CV para obtener un análisis instantáneo y accionable:
+* **Fit Score:** Una calificación visual (sobre 100) que evalúa el alineamiento con el rol.
+* **Brecha de Habilidades:** Identificación clara de las *skills* faltantes para el puesto.
+* **Contexto de Brecha Salarial:** Datos reales sobre la disparidad salarial de género para ese rol específico en México.
+* **Estrategia de Negociación:** Tips personalizados para negociar el salario, basados en la experiencia de la candidata.
+* **Carta de Presentación:** Un borrador generado por IA, altamente personalizado para la vacante y el perfil.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🛠️ Stack Tecnológico & Arquitectura
+* **Frontend:** React, TypeScript, Tailwind CSS, shadcn/ui, Vite.
+* **Backend:** Netlify Serverless Functions (`netlify/functions/analyze.ts`).
+* **Modelo de IA:** Anthropic `claude-sonnet-4-20250514` (Claude 3.5 Sonnet).
+* **Despliegue:** Netlify (Auto-deploy desde la rama `main`).
+* **Diseño:** Deep Purple (`#1a0533`), Electric Violet (`#7c3aed`), Rose Gold (`#e8b4b8`).
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### ⚡ El Reto Técnico: Superando el colapso de servidores
+Durante el evento global de SheBuilds, los servidores de la plataforma principal colapsaron debido a la masiva demanda simultánea. Además, las políticas estrictas de CORS bloqueaban las llamadas directas desde el navegador a la API de Anthropic.
 
-Follow these steps:
+**La Solución:** Implementamos un pivote de arquitectura en tiempo real. Construimos un backend proxy utilizando **Netlify Serverless Functions**. El frontend ahora se comunica de forma segura con la función de Netlify, la cual custodia la `ANTHROPIC_API_KEY` en variables de entorno, limpia la respuesta JSON de Claude (eliminando el formato markdown residual) y devuelve los datos estructurados a la interfaz.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🚀 Desarrollo Local
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+1. **Clona el repositorio:**
+   ```bash
+   git clone [https://github.com/G10hdz/fairfit-ai.git](https://github.com/G10hdz/fairfit-ai.git)
+   cd fairfit-ai
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
 ```
 
-**Edit a file directly in GitHub**
+2. **Instala las dependencias:**
+```bash
+npm install
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
 
-**Use GitHub Codespaces**
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+3. **Configura las Variables de Entorno:**
+Crea un archivo `.env` en la raíz del proyecto y agrega tu llave de Anthropic:
+```env
+ANTHROPIC_API_KEY=tu_api_key_aqui
 
-## What technologies are used for this project?
+```
 
-This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+4. **Levanta el entorno de desarrollo (con funciones serverless):**
+```bash
+npx netlify dev --target-port 8080
 
-## How can I deploy this project?
+```
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
 
-Yes, you can!
+## 🛣️ Roadmap (v2)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+* [ ] **Soporte Bilingüe:** Toggle para cambiar la interfaz y los prompts entre Español e Inglés.
+* [ ] **Mejoras UI:** Animaciones más fluidas para el *Fit Score* circular.
+* [ ] **Bring Your Own Key (BYOK):** Permitir a las usuarias ingresar su propia API Key de Anthropic.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+*Hecho con 💜 para cerrar la brecha de género en tech.*
