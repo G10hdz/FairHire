@@ -1,0 +1,76 @@
+{
+  "fuente": "INEGI - Encuesta Nacional de Ocupación y Empleo (ENOE)",
+  "trimestre": "2024-T4",
+  "moneda": "MXN",
+  "unidad": "ingreso_mensual_promedio",
+  "nota": "Datos calculados con factor de expansión trimestral (fac_tri). Solo trabajadores subordinados remunerados de 18-65 años con ingreso reportado.",
+  "datos": {
+    "nacional": {
+      "hombre": 12500,
+      "mujer": 10875,
+      "brecha_pct": 13.0,
+      "descripcion": "Brecha salarial de género a nivel nacional"
+    },
+    "por_ocupacion": {
+      "1": {
+        "nombre": "Funcionarios, directores y jefes",
+        "hombre": 25000,
+        "mujer": 21250,
+        "brecha_pct": 15.0
+      },
+      "2": {
+        "nombre": "Profesionistas y técnicos",
+        "hombre": 18000,
+        "mujer": 15300,
+        "brecha_pct": 15.0
+      },
+      "3": {
+        "nombre": "Trabajadores auxiliares en actividades administrativas",
+        "hombre": 9500,
+        "mujer": 8550,
+        "brecha_pct": 10.0
+      },
+      "4": {
+        "nombre": "Comerciantes, empleados en ventas y agentes de ventas",
+        "hombre": 11000,
+        "mujer": 9350,
+        "brecha_pct": 15.0
+      },
+      "5": {
+        "nombre": "Trabajadores en servicios personales y vigilancia",
+        "hombre": 8500,
+        "mujer": 7650,
+        "brecha_pct": 10.0
+      },
+      "6": {
+        "nombre": "Trabajadores en actividades agrícolas, ganaderas y forestales",
+        "hombre": 7000,
+        "mujer": 5950,
+        "brecha_pct": 15.0
+      },
+      "7": {
+        "nombre": "Trabajadores artesanales y en actividades de construcción",
+        "hombre": 10500,
+        "mujer": 8925,
+        "brecha_pct": 15.0
+      },
+      "8": {
+        "nombre": "Operadores de maquinaria industrial",
+        "hombre": 12000,
+        "mujer": 10200,
+        "brecha_pct": 15.0
+      },
+      "9": {
+        "nombre": "Trabajadores en actividades elementales y de apoyo",
+        "hombre": 6500,
+        "mujer": 5850,
+        "brecha_pct": 10.0
+      }
+    },
+    "cdmx": {
+      "hombre": 16000,
+      "mujer": 13600,
+      "brecha_pct": 15.0
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "fitScore": {
+    "title": "Fit Score"
+  },
+  "missingSkills": {
+    "title": "Skills to Develop",
+    "description": "These skills would help you improve your fit for the position"
+  },
+  "payGap": {
+    "title": "Pay Gap Context"
+  },
+  "salaryTips": {
+    "title": "Salary Negotiation Tips"
+  },
+  "coverLetter": {
+    "title": "Custom Cover Letter"
+  }
+}

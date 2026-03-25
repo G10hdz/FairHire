@@ -1,0 +1,14 @@
+{
+  "title": "Analyze your job fit",
+  "description": "Discover how well you match a position, identify gender pay gaps, and get tools to negotiate better.",
+  "form": {
+    "jobDescription": {
+      "title": "Job Description",
+      "description": "Paste the complete job description you want to apply for"
+    },
+    "cv": {
+      "title": "Your CV/Resume",
+      "description": "Paste your CV text or a description of your professional experience"
+    }
+  }
+}

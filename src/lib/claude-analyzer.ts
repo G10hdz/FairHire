@@ -1,3 +1,5 @@
+import i18n from '../i18n';
+
 export interface AnalysisResult {
   fitScore: number;
   fitSummary: string;
@@ -12,7 +14,8 @@ const BASE_DELAY_MS = 1000;
 
 export async function analyzeJobFitWithClaude(
   jobDescription: string,
-  cvText: string
+  cvText: string,
+  language: string = 'es'
 ): Promise<AnalysisResult> {
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     try {
@@ -23,6 +26,24 @@ export async function analyzeJobFitWithClaude(
         },
         body: JSON.stringify({ jobDescription, cvText }),
       });
+  const makeRequest = async (): Promise<AnalysisResult> => {
+    const response = await fetch('/.netlify/functions/analyze', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jobDescription,
+        cvText,
+        language,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('API Error:', errorData);
+      throw new Error(`API Error: ${response.status} - ${errorData}`);
+    }
 
       if (!response.ok) {
         const errorData = await response.text();
@@ -54,4 +75,15 @@ export async function analyzeJobFitWithClaude(
   }
 
   throw new Error('Service unavailable after multiple retries');
+}
+    return result;
+  };
+
+  try {
+    return await retryWithBackoff(makeRequest, 3, 1000);
+  } catch (error) {
+    console.error('API Error:', error);
+    if (error instanceof Error) throw error;
+    throw new Error('Failed to analyze job fit');
+  }
 }

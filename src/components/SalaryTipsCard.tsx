@@ -1,18 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface SalaryTipsCardProps {
   tips: string[];
 }
 
 export const SalaryTipsCard = ({ tips }: SalaryTipsCardProps) => {
+  const { t } = useTranslation();
   return (
     <Card>
       <CardHeader>
         <CardTitle className="text-primary flex items-center gap-2">
           <DollarSign className="w-5 h-5" />
-          Tips de Negociación Salarial
+          {t("analysis.salaryTips.title")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">

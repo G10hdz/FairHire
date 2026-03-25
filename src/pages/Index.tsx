@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,7 +12,15 @@ import { MissingSkillsCard } from "@/components/MissingSkillsCard";
 import { PayGapCard } from "@/components/PayGapCard";
 import { SalaryTipsCard } from "@/components/SalaryTipsCard";
 import { CoverLetterCard } from "@/components/CoverLetterCard";
+import { LanguageToggle } from "@/components/LanguageToggle/LanguageToggle";
 import { AlertTriangle } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useSalaryBenchmark, getSINCODivision } from "@/hooks/useSalaryBenchmark";
+
+// Lazy load SalaryBenchmark for better performance
+const SalaryBenchmark = lazy(() => import("@/components/SalaryBenchmark").then(module => ({
+  default: module.SalaryBenchmark
+})));
 
 const Index = () => {
   const [jobDescription, setJobDescription] = useState("");
@@ -22,25 +30,35 @@ const Index = () => {
   const [results, setResults] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { t, i18n } = useTranslation();
+
+  // Get current language for API calls
+  const currentLanguage = i18n.language.split('-')[0]; // 'es' or 'en'
+
+  // Fetch INEGI benchmark data (national level by default)
+  const { data: benchmark, isLoading: isBenchmarkLoading } = useSalaryBenchmark({
+    sinco: "2111", // Default to software engineers (division 2 = Profesionistas y técnicos)
+    entidad: "09"  // CDMX
+  });
 
   const handleAnalyze = async () => {
     setIsAnalyzing(true);
     setError(null);
-    
+
     try {
-      const analysisResult = await analyzeJobFitWithClaude(jobDescription, cvText);
+      const analysisResult = await analyzeJobFitWithClaude(jobDescription, cvText, currentLanguage);
       setResults(analysisResult);
       setShowResults(true);
       toast({
-        title: "¡Análisis completado!",
-        description: "Tu análisis de fit laboral está listo.",
+        title: t("messages.analysisComplete"),
+        description: t("messages.analysisCompleteDesc"),
       });
     } catch (error) {
       console.error("Analysis error:", error);
-      const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+      const errorMessage = error instanceof Error ? error.message : t("errors.generic");
       setError(errorMessage);
       toast({
-        title: "Error en el análisis",
+        title: t("messages.analysisError"),
         description: errorMessage,
         variant: "destructive",
       });
@@ -56,12 +74,15 @@ const Index = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-primary">FairHire</h1>
-              <p className="text-sm text-muted-foreground">por Positronica Labs</p>
+              <h1 className="text-3xl font-bold text-primary">{t("app.name")}</h1>
+              <p className="text-sm text-muted-foreground">{t("app.tagline")}</p>
             </div>
-            <Badge variant="secondary" className="hidden md:block">
-              Empoderando a mujeres en tech
-            </Badge>
+            <div className="flex items-center gap-4">
+              <Badge variant="secondary" className="hidden md:block">
+                {t("app.tagline")}
+              </Badge>
+              <LanguageToggle />
+            </div>
           </div>
         </div>
       </header>
@@ -72,11 +93,10 @@ const Index = () => {
           <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Analiza tu fit laboral
+                {t("home.title")}
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Descubre qué tan bien encajas en un puesto, identifica brechas salariales de género, 
-                y obtén herramientas para negociar mejor.
+                {t("home.description")}
               </p>
             </div>
 
@@ -92,15 +112,15 @@ const Index = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-primary">
                     <span className="text-2xl">📋</span>
-                    Descripción del Trabajo
+                    {t("home.form.jobDescription.title")}
                   </CardTitle>
                   <CardDescription>
-                    Pega aquí la descripción completa del trabajo al que quieres aplicar
+                    {t("home.form.jobDescription.description")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Textarea
-                    placeholder="Ejemplo: Buscamos Frontend Developer con experiencia en React, TypeScript, y metodologías ágiles..."
+                    placeholder={t("placeholders.jobDescription")}
                     className="min-h-[200px] resize-none border-muted focus:border-primary"
                     value={jobDescription}
                     onChange={(e) => setJobDescription(e.target.value)}
@@ -112,15 +132,15 @@ const Index = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-secondary-foreground">
                     <span className="text-2xl">👩‍💼</span>
-                    Tu CV/Currículum
+                    {t("home.form.cv.title")}
                   </CardTitle>
                   <CardDescription>
-                    Pega el texto de tu CV o una descripción de tu experiencia profesional
+                    {t("home.form.cv.description")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Textarea
-                    placeholder="Ejemplo: Frontend Developer con 3 años de experiencia. Especializada en React, JavaScript, CSS..."
+                    placeholder={t("placeholders.cv")}
                     className="min-h-[200px] resize-none border-muted focus:border-secondary"
                     value={cvText}
                     onChange={(e) => setCvText(e.target.value)}
@@ -138,14 +158,14 @@ const Index = () => {
                 {isAnalyzing ? (
                   <div className="flex items-center gap-2">
                     <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full"></div>
-                    Analizando...
+                    {t("actions.analyzing")}
                   </div>
                 ) : (
-                  "Analizar Fit y Brecha Salarial"
+                  t("actions.analyze")
                 )}
               </Button>
               <p className="text-sm text-muted-foreground mt-2">
-                Análisis potenciado por IA
+                {t("labels.aiPowered")}
               </p>
             </div>
           </div>
@@ -153,7 +173,7 @@ const Index = () => {
           /* Results */
           <div className="max-w-6xl mx-auto space-y-8">
             <div className="text-center">
-              <h2 className="text-3xl font-bold text-primary mb-2">Análisis Completado</h2>
+              <h2 className="text-3xl font-bold text-primary mb-2">{t("labels.analysisCompleted")}</h2>
               <Button
                 variant="outline"
                 onClick={() => {
@@ -163,7 +183,7 @@ const Index = () => {
                 }}
                 className="text-sm"
               >
-                ← Nuevo análisis
+                ← {t("actions.newAnalysis")}
               </Button>
             </div>
 
@@ -177,6 +197,37 @@ const Index = () => {
                 </div>
                 <div className="lg:col-span-3">
                   <PayGapCard context={results.payGapContext} />
+                </div>
+                <div className="lg:col-span-3">
+                  {isBenchmarkLoading ? (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                          {t("benchmark.title")}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="h-4 bg-muted rounded animate-pulse" />
+                          <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ) : benchmark ? (
+                    <Suspense fallback={
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>{t("benchmark.title")}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="h-20 bg-muted rounded animate-pulse" />
+                        </CardContent>
+                      </Card>
+                    }>
+                      <SalaryBenchmark data={benchmark} />
+                    </Suspense>
+                  ) : null}
                 </div>
                 <div className="lg:col-span-2">
                   <SalaryTipsCard tips={results.salaryNegotiationTips} />
@@ -195,10 +246,10 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center space-y-3">
             <p className="text-sm text-muted-foreground">
-              Hecho con 💜 para cerrar la brecha de género en tech
+              {t("app.footer")}
             </p>
             <p className="text-xs text-muted-foreground">
-              © 2024 Positronica Labs • FairHire
+              {t("app.copyright")}
             </p>
             <a
               href="https://www.linkedin.com/in/mayte-giovanna-hernandez-rios"
