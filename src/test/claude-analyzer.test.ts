@@ -106,4 +106,64 @@ describe("claude-analyzer API client", () => {
       analyzeJobFitWithClaude(mockJobDescription, mockCvText)
     ).rejects.toThrow("API Error: 429");
   });
+
+  it("retries on 529 error and succeeds on the next attempt", async () => {
+    vi.useFakeTimers();
+
+    vi.mocked(global.fetch)
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 529,
+        text: async () => '{"error":"AI API error: 529"}',
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => mockValidResponse,
+      } as Response);
+
+    const resultPromise = analyzeJobFitWithClaude(mockJobDescription, mockCvText);
+    await vi.runAllTimersAsync();
+    const result = await resultPromise;
+
+    expect(result).toEqual(mockValidResponse);
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+
+    vi.useRealTimers();
+  });
+
+  it("throws after exhausting all 3 retries on persistent 529 errors", async () => {
+    vi.useFakeTimers();
+
+    vi.mocked(global.fetch).mockResolvedValue({
+      ok: false,
+      status: 529,
+      text: async () => '{"error":"AI API error: 529"}',
+    } as Response);
+
+    const resultPromise = analyzeJobFitWithClaude(mockJobDescription, mockCvText);
+    // Attach rejection handler immediately to prevent unhandled rejection warning
+    const caughtPromise = resultPromise.catch((err: unknown) => err);
+
+    await vi.runAllTimersAsync();
+
+    const error = await caughtPromise;
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toContain("API Error: 529");
+    expect(global.fetch).toHaveBeenCalledTimes(4); // 1 initial + 3 retries
+
+    vi.useRealTimers();
+  });
+
+  it("does not retry on non-529 errors", async () => {
+    vi.mocked(global.fetch).mockResolvedValue({
+      ok: false,
+      status: 500,
+      text: async () => "Internal Server Error",
+    } as Response);
+
+    await expect(
+      analyzeJobFitWithClaude(mockJobDescription, mockCvText)
+    ).rejects.toThrow("API Error: 500");
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+  });
 });
