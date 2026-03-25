@@ -111,7 +111,7 @@ Response:
 5. `npx netlify dev --target-port 8080`
 
 ### 🛣️ Roadmap (v2)
-- [ ] **Soporte Bilingüe:** Toggle para cambiar la interfaz y los prompts entre Español e Inglés.
+- [ ✓] **Soporte Bilingüe:** Toggle para cambiar la interfaz y los prompts entre Español e Inglés.
 - [ ] **Mejoras UI:** Animaciones más fluidas para el *Fit Score* circular.
 - [ ] **Bring Your Own Key (BYOK):** Permitir a las usuarias ingresar su propia API Key de Anthropic.
 
@@ -219,7 +219,7 @@ Response:
 5. `npx netlify dev --target-port 8080`
 
 ### 🛣️ Roadmap (v2)
-- [ ] **Bilingual Support:** Toggle to switch the interface and prompts between Spanish and English.
+- [ ✓] **Bilingual Support:** Toggle to switch the interface and prompts between Spanish and English.
 - [ ] **UI Improvements:** Smoother animations for the circular Fit Score.
 - [ ] **Bring Your Own Key (BYOK):** Allow users to enter their own Anthropic API Key.
 
