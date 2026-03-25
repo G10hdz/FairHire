@@ -1,0 +1,58 @@
+{
+  "app": {
+    "name": "FairHire",
+    "tagline": "Empoderando a mujeres en tech",
+    "footer": "Hecho con 💜 para cerrar la brecha de género en tech",
+    "copyright": "© 2024 Positronica Labs • FairHire"
+  },
+  "language": {
+    "es": "Español",
+    "en": "English"
+  },
+  "actions": {
+    "analyze": "Analizar Fit y Brecha Salarial",
+    "analyzing": "Analizando...",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "newAnalysis": "Nuevo análisis",
+    "cancel": "Cancelar"
+  },
+  "placeholders": {
+    "jobDescription": "Ejemplo: Buscamos Frontend Developer con experiencia en React, TypeScript, y metodologías ágiles...",
+    "cv": "Ejemplo: Frontend Developer con 3 años de experiencia. Especializada en React, JavaScript, CSS..."
+  },
+  "messages": {
+    "analysisComplete": "¡Análisis completado!",
+    "analysisCompleteDesc": "Tu análisis de fit laboral está listo.",
+    "analysisError": "Error en el análisis",
+    "copiedSuccess": "¡Copiado!",
+    "copiedDesc": "La carta de presentación ha sido copiada al portapapeles.",
+    "copyError": "Error",
+    "copyErrorDesc": "No se pudo copiar la carta. Inténtalo de nuevo."
+  },
+  "errors": {
+    "generic": "Error desconocido",
+    "analysisFailed": "No se pudo analizar el fit laboral",
+    "invalidResponse": "Formato de respuesta inválido de la API",
+    "requiredField": "Este campo es requerido"
+  },
+  "labels": {
+    "aiPowered": "Análisis potenciado por IA",
+    "analysisCompleted": "Análisis Completado"
+  },
+  "benchmark": {
+    "title": "Datos Salariales",
+    "gap": "brecha",
+    "whatIsGap": "¿Qué es la brecha salarial?",
+    "gapExplanation": "La brecha salarial de género representa la diferencia porcentual entre el salario promedio de hombres y mujeres en una ocupación específica. Una brecha positiva indica que los hombres ganan más en promedio.",
+    "highGapAlert": "Brecha salarial significativa detectada",
+    "highGapDescription": "En esta ocupación, las mujeres ganan considerablemente menos que los hombres en promedio.",
+    "men": "Hombres",
+    "women": "Mujeres",
+    "difference": "Diferencia",
+    "ratio": "Ratio M/H",
+    "mockData": "(Datos de muestra)",
+    "methodologyNote": "Datos INEGI ENOE con muestra representativa nacional. Salarios mensuales netos en pesos mexicanos.",
+    "noData": "Datos no disponibles para esta ocupación"
+  }
+}

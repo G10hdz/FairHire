@@ -39,6 +39,70 @@ Durante el evento global de SheBuilds, los servidores de la plataforma principal
 
 **La Solución:** Implementamos un pivote de arquitectura en tiempo real. Construimos un backend proxy utilizando **Netlify Serverless Functions**. El frontend ahora se comunica de forma segura con la función de Netlify, la cual custodia la `ANTHROPIC_API_KEY` en variables de entorno, limpia la respuesta JSON de Claude (eliminando el formato markdown residual) y devuelve los datos estructurados a la interfaz.
 
+### 📊 Datos Salariales INEGI-ENOE
+
+FairHire integra datos oficiales de la **Encuesta Nacional de Ocupación y Empleo (ENOE)** del INEGI para proporcionar contexto salarial con perspectiva de género.
+
+#### ¿Qué datos proporcionamos?
+- **Brecha salarial nacional** por género (promedio trimestral)
+- **Brecha por división ocupacional** SINCO (9 categorías principales)
+- **Datos específicos de CDMX** con ajuste por entidad federativa
+- **Muestra representativa** a nivel nacional con factor de expansión trimestral
+
+#### Actualización de datos
+Los datos ENOE son trimestrales. Para actualizar los benchmarks salariales:
+
+```bash
+# Actualizar automáticamente (descarga el trimestre más reciente)
+./scripts/update-inegi-data.sh
+
+# Actualizar con un trimestre específico
+./scripts/update-inegi-data.sh --trimestre 2024-T4
+```
+
+El script:
+1. Descarga el ZIP de ENOE desde el INEGI
+2. Extrae los archivos SDEMT*.csv y COE1T*.csv
+3. Ejecuta `process_enoe.py` para calcular brechas
+4. Genera `netlify/functions/data/salary_benchmarks.json`
+5. Crea un commit automático con los nuevos datos
+
+**Requisitos:** Python 3.8+ con pandas (`pip install pandas`)
+
+#### API de Benchmarks
+Endpoint: `GET /.netlify/functions/inegi-benchmark`
+
+```typescript
+// Ejemplo: obtener datos nacionales
+fetch('/.netlify/functions/inegi-benchmark')
+
+// Ejemplo: obtener datos por ocupación (SINCO 2111 = Ingenieros en sistemas)
+fetch('/.netlify/functions/inegi-benchmark?ocupacion=2111&entidad=09')
+```
+
+Response:
+```typescript
+{
+  ocupacion?: string;
+  salario_promedio_hombre: number;
+  salario_promedio_mujer: number;
+  brecha_porcentaje: number;
+  fuente: string;
+  trimestre: string;
+  es_nacional: boolean;
+  es_cdmx: boolean;
+  muestra_suficiente: boolean;
+}
+```
+
+**Caché HTTP:** 7 días (`Cache-Control: public, max-age=604800`)
+
+#### Variables de entorno
+| Variable | Descripción | Default |
+|----------|-------------|---------|
+| `INEGI_DATA_PATH` | Ruta al JSON de benchmarks | `./netlify/functions/data/salary_benchmarks.json` |
+| `ENABLE_INEGI_CACHE` | Habilitar caché HTTP | `true` |
+
 ### 🚀 Desarrollo Local
 1. `git clone https://github.com/G10hdz/fairfit-ai.git`
 2. `cd fairfit-ai`
@@ -79,9 +143,73 @@ Users simply paste a job description and the text of their CV to receive an inst
 * **Design:** Deep Purple (`#1a0533`), Electric Violet (`#7c3aed`), Rose Gold (`#e8b4b8`).
 
 #### ⚡ The Technical Challenge: Overcoming server collapse
-During the global SheBuilds event, the main platform’s servers collapsed due to massive simultaneous demand. Additionally, strict CORS policies blocked direct browser calls to the Anthropic API.
+During the global SheBuilds event, the main platform's servers collapsed due to massive simultaneous demand. Additionally, strict CORS policies blocked direct browser calls to the Anthropic API.
 
-**The Solution:** We implemented a real-time architecture pivot. We built a backend proxy using **Netlify Serverless Functions**. The frontend now securely communicates with the Netlify function, which protects the `ANTHROPIC_API_KEY` in environment variables, cleans Claude’s JSON response (removing residual markdown formatting), and returns structured data to the interface.
+**The Solution:** We implemented a real-time architecture pivot. We built a backend proxy using **Netlify Serverless Functions**. The frontend now securely communicates with the Netlify function, which protects the `ANTHROPIC_API_KEY` in environment variables, cleans Claude's JSON response (removing residual markdown formatting), and returns structured data to the interface.
+
+### 📊 INEGI-ENOE Salary Data
+
+FairHire integrates official data from the **National Survey of Occupation and Employment (ENOE)** by INEGI to provide salary context with a gender perspective.
+
+#### What data do we provide?
+- **National gender pay gap** (quarterly average)
+- **Pay gap by SINCO occupational division** (9 main categories)
+- **CDMX-specific data** with state-level adjustment
+- **Nationally representative sample** with quarterly expansion factor
+
+#### Updating data
+ENOE data is quarterly. To update salary benchmarks:
+
+```bash
+# Auto-update (downloads latest quarter)
+./scripts/update-inegi-data.sh
+
+# Update with specific quarter
+./scripts/update-inegi-data.sh --trimestre 2024-T4
+```
+
+The script:
+1. Downloads ENOE ZIP from INEGI
+2. Extracts SDEMT*.csv and COE1T*.csv files
+3. Runs `process_enoe.py` to calculate gaps
+4. Generates `netlify/functions/data/salary_benchmarks.json`
+5. Creates automatic commit with new data
+
+**Requirements:** Python 3.8+ with pandas (`pip install pandas`)
+
+#### Benchmarks API
+Endpoint: `GET /.netlify/functions/inegi-benchmark`
+
+```typescript
+// Example: get national data
+fetch('/.netlify/functions/inegi-benchmark')
+
+// Example: get data by occupation (SINCO 2111 = Systems Engineers)
+fetch('/.netlify/functions/inegi-benchmark?ocupacion=2111&entidad=09')
+```
+
+Response:
+```typescript
+{
+  ocupacion?: string;
+  salario_promedio_hombre: number;
+  salario_promedio_mujer: number;
+  brecha_porcentaje: number;
+  fuente: string;
+  trimestre: string;
+  es_nacional: boolean;
+  es_cdmx: boolean;
+  muestra_suficiente: boolean;
+}
+```
+
+**HTTP Cache:** 7 days (`Cache-Control: public, max-age=604800`)
+
+#### Environment Variables
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `INEGI_DATA_PATH` | Path to benchmarks JSON | `./netlify/functions/data/salary_benchmarks.json` |
+| `ENABLE_INEGI_CACHE` | Enable HTTP cache | `true` |
 
 ### 🚀 Local Development
 1. `git clone https://github.com/G10hdz/fairfit-ai.git`

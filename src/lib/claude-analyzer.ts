@@ -1,3 +1,5 @@
+import i18n from '../i18n';
+
 export interface AnalysisResult {
   fitScore: number;
   fitSummary: string;
@@ -7,22 +9,15 @@ export interface AnalysisResult {
   coverLetter: string;
 }
 
-async function retryWithBackoff<T>(
-  fn: () => Promise<T>,
-  retries: number = 3,
-  baseDelay: number = 1000
-): Promise<T> {
-  for (let i = 0; i <= retries; i++) {
-    try {
-      return await fn();
-    } catch (error) {
-      if (i === retries || !(error instanceof Error) || !error.message.includes('API Error: 529')) {
-        throw error;
-      }
-      const delay = baseDelay * Math.pow(2, i);
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
-  }
+function getSystemPrompt(): string {
+  return i18n.t('prompts.analysis.system');
+}
+
+function getUserPrompt(jobDescription: string, cvText: string): string {
+  const template = i18n.t('prompts.analysis.userTemplate');
+  return template
+    .replace('{{jobDescription}}', jobDescription)
+    .replace('{{cvText}}', cvText);
 }
 
 export async function analyzeJobFitWithClaude(
@@ -35,7 +30,12 @@ export async function analyzeJobFitWithClaude(
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ jobDescription, cvText }),
+      body: JSON.stringify({
+        jobDescription,
+        cvText,
+        systemPrompt: getSystemPrompt(),
+        userPrompt: getUserPrompt(jobDescription, cvText),
+      }),
     });
 
     if (!response.ok) {

@@ -8,6 +8,26 @@ vi.mock("@/lib/claude-analyzer", () => ({
   analyzeJobFitWithClaude: vi.fn(),
 }));
 
+// Mock the salary benchmark hook to avoid fetch errors in tests
+vi.mock("@/hooks/useSalaryBenchmark", () => ({
+  useSalaryBenchmark: () => ({
+    data: {
+      salario_promedio_hombre: 12500,
+      salario_promedio_mujer: 10875,
+      brecha_porcentaje: 13.0,
+      fuente: "INEGI",
+      trimestre: "2024-T4",
+      moneda: "MXN",
+      es_nacional: true,
+      es_cdmx: false,
+      muestra_suficiente: true,
+    },
+    isLoading: false,
+    isError: false,
+  }),
+  getSINCODivision: (sinco: string) => sinco.charAt(0),
+}));
+
 // Mock toast hook with proper state management
 const mockToast = vi.fn();
 vi.mock("@/hooks/use-toast", () => ({
@@ -26,50 +46,46 @@ describe("Index Page", () => {
 
   it("renders the main heading and description", () => {
     render(<Index />);
-    
+
     expect(screen.getByText("FairHire")).toBeInTheDocument();
-    expect(screen.getByText("por Positronica Labs")).toBeInTheDocument();
-    expect(
-      screen.getByText("Analiza tu fit laboral")
-    ).toBeInTheDocument();
+    // Tagline in header (not the badge)
+    const header = screen.getByRole("banner");
+    expect(header.querySelector("p")?.textContent).toMatch(/Empowering women in tech|Empoderando a mujeres en tech/i);
   });
 
   it("shows input fields for job description and CV", () => {
     render(<Index />);
-    
-    expect(
-      screen.getByText("Descripción del Trabajo")
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Tu CV/Currículum")
-    ).toBeInTheDocument();
+
+    // Check for textareas by placeholder
+    expect(screen.getByPlaceholderText(/Ejemplo: Buscamos Frontend Developer|Example: Looking for Frontend/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Ejemplo: Frontend Developer con 3 años|Example: Frontend Developer with 3 years/i)).toBeInTheDocument();
   });
 
   it("disables analyze button when inputs are empty", () => {
     render(<Index />);
-    
-    const analyzeButton = screen.getByText("Analizar Fit y Brecha Salarial");
+
+    const analyzeButton = screen.getByText(/Analizar Fit|Analyze Fit/i);
     expect(analyzeButton).toBeDisabled();
   });
 
   it("enables analyze button when both inputs have text", () => {
     render(<Index />);
-    
+
     const jobDescTextarea = screen.getByPlaceholderText(
-      /Ejemplo: Buscamos Frontend Developer/i
+      /Ejemplo: Buscamos Frontend Developer|Example: Looking for Frontend/i
     );
     const cvTextarea = screen.getByPlaceholderText(
-      /Ejemplo: Frontend Developer con 3 años/i
+      /Ejemplo: Frontend Developer con 3 años|Example: Frontend Developer with 3 years/i
     );
-    
+
     fireEvent.change(jobDescTextarea, {
       target: { value: "Job description text" },
     });
     fireEvent.change(cvTextarea, {
       target: { value: "CV text" },
     });
-    
-    const analyzeButton = screen.getByText("Analizar Fit y Brecha Salarial");
+
+    const analyzeButton = screen.getByText(/Analizar Fit|Analyze Fit/i);
     expect(analyzeButton).not.toBeDisabled();
   });
 
@@ -82,46 +98,46 @@ describe("Index Page", () => {
       salaryNegotiationTips: ["Investiga salarios", "Destaca tus logros"],
       coverLetter: "Estimado equipo,\n\nMe interesa el puesto...",
     };
-    
+
     vi.mocked(analyzeJobFitWithClaude).mockResolvedValue(mockResult);
-    
+
     render(<Index />);
-    
+
     // Fill in the inputs
     const jobDescTextarea = screen.getByPlaceholderText(
-      /Ejemplo: Buscamos Frontend Developer/i
+      /Ejemplo: Buscamos Frontend Developer|Example: Looking for Frontend/i
     );
     const cvTextarea = screen.getByPlaceholderText(
-      /Ejemplo: Frontend Developer con 3 años/i
+      /Ejemplo: Frontend Developer con 3 años|Example: Frontend Developer with 3 years/i
     );
-    
+
     fireEvent.change(jobDescTextarea, {
       target: { value: "Senior Frontend Developer position" },
     });
     fireEvent.change(cvTextarea, {
       target: { value: "Frontend Developer with 3 years experience" },
     });
-    
+
     // Click analyze button
-    const analyzeButton = screen.getByText("Analizar Fit y Brecha Salarial");
+    const analyzeButton = screen.getByText(/Analizar Fit|Analyze Fit/i);
     fireEvent.click(analyzeButton);
-    
+
     // Wait for results
     await waitFor(() => {
-      expect(screen.getByText("Análisis Completado")).toBeInTheDocument();
+      expect(screen.getByText(/Análisis Completado|Analysis Completed/i)).toBeInTheDocument();
     }, { timeout: 2000 });
-    
+
     // Verify API was called
     expect(analyzeJobFitWithClaude).toHaveBeenCalledWith(
       "Senior Frontend Developer position",
       "Frontend Developer with 3 years experience"
     );
-    
+
     // Verify results are displayed
     expect(screen.getByText("75")).toBeInTheDocument();
-    expect(screen.getByText("Fit Score")).toBeInTheDocument();
+    expect(screen.getByText(/Fit Score/i)).toBeInTheDocument();
     expect(
-      screen.getByText("Habilidades a Desarrollar")
+      screen.getByText(/Habilidades a Desarrollar|Skills to Develop/i)
     ).toBeInTheDocument();
   });
 
@@ -129,26 +145,26 @@ describe("Index Page", () => {
     vi.mocked(analyzeJobFitWithClaude).mockRejectedValue(
       new Error("API key not configured")
     );
-    
+
     render(<Index />);
-    
+
     const jobDescTextarea = screen.getByPlaceholderText(
-      /Ejemplo: Buscamos Frontend Developer/i
+      /Ejemplo: Buscamos Frontend Developer|Example: Looking for Frontend/i
     );
     const cvTextarea = screen.getByPlaceholderText(
-      /Ejemplo: Frontend Developer con 3 años/i
+      /Ejemplo: Frontend Developer con 3 años|Example: Frontend Developer with 3 years/i
     );
-    
+
     fireEvent.change(jobDescTextarea, {
       target: { value: "Job description" },
     });
     fireEvent.change(cvTextarea, {
       target: { value: "CV text" },
     });
-    
-    const analyzeButton = screen.getByText("Analizar Fit y Brecha Salarial");
+
+    const analyzeButton = screen.getByText(/Analizar Fit|Analyze Fit/i);
     fireEvent.click(analyzeButton);
-    
+
     // The error message is displayed in an alert div
     await waitFor(() => {
       expect(screen.getByRole("alert")).toBeInTheDocument();
@@ -165,35 +181,35 @@ describe("Index Page", () => {
       salaryNegotiationTips: ["Negocia"],
       coverLetter: "Cover letter",
     };
-    
+
     vi.mocked(analyzeJobFitWithClaude).mockResolvedValue(mockResult);
-    
+
     render(<Index />);
-    
+
     // Fill and submit
     const jobDescTextarea = screen.getByPlaceholderText(
-      /Ejemplo: Buscamos Frontend Developer/i
+      /Ejemplo: Buscamos Frontend Developer|Example: Looking for Frontend/i
     );
     const cvTextarea = screen.getByPlaceholderText(
-      /Ejemplo: Frontend Developer con 3 años/i
+      /Ejemplo: Frontend Developer con 3 años|Example: Frontend Developer with 3 years/i
     );
-    
+
     fireEvent.change(jobDescTextarea, { target: { value: "Job" } });
     fireEvent.change(cvTextarea, { target: { value: "CV" } });
-    
-    fireEvent.click(screen.getByText("Analizar Fit y Brecha Salarial"));
-    
+
+    fireEvent.click(screen.getByText(/Analizar Fit|Analyze Fit/i));
+
     await waitFor(() => {
-      expect(screen.getByText("Análisis Completado")).toBeInTheDocument();
+      expect(screen.getByText(/Análisis Completado|Analysis Completed/i)).toBeInTheDocument();
     }, { timeout: 2000 });
-    
-    // Click "Nuevo análisis" button
-    const newAnalysisButton = screen.getByText("← Nuevo análisis");
+
+    // Click "Nuevo análisis" or "New analysis" button
+    const newAnalysisButton = screen.getByText(/← Nuevo análisis|← New analysis/i);
     fireEvent.click(newAnalysisButton);
-    
+
     // Should return to input form
     expect(
-      screen.getByText("Analiza tu fit laboral")
+      screen.getByText(/Analiza tu fit laboral|Analyze your job fit/i)
     ).toBeInTheDocument();
   });
 });
