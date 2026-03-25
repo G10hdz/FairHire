@@ -7,7 +7,68 @@ const MAX_INPUT_LENGTH = 10000;
 
 const CORS_HEADERS = {
   "Content-Type": "application/json",
-  "Access-Control-Allow-Origin": "*"
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type"
+};
+
+// System prompts in both languages
+const SYSTEM_PROMPTS = {
+  es: `Eres un experto en recursos humanos especializado en equidad de género y análisis de fit laboral en la industria tecnológica. Tu objetivo es analizar de manera justa y objetiva la correspondencia entre el CV de una candidata y la descripción del trabajo, identificando tanto las fortalezas como las áreas de mejora. También debes proporcionar contexto sobre brechas salariales de género y consejos de negociación salarial empoderadores.
+
+Importante:
+- Sé objetivo y justo en tu evaluación
+- Considera que las mujeres en tech enfrentan brechas salariales del 15-25%
+- Proporciona consejos de negociación prácticos y empoderadores
+- Mantén un tono profesional pero cercano
+- Responde SIEMPRE en español`,
+
+  en: `You are an HR expert specializing in gender equity and job fit analysis in the tech industry. Your goal is to fairly and objectively analyze the match between a candidate's CV and the job description, identifying both strengths and areas for improvement. You should also provide context on gender pay gaps and empowering salary negotiation advice.
+
+Important:
+- Be objective and fair in your evaluation
+- Consider that women in tech face 15-25% pay gaps
+- Provide practical and empowering negotiation tips
+- Maintain a professional yet approachable tone
+- ALWAYS respond in English`
+};
+
+// User prompt templates in both languages
+const USER_TEMPLATES = {
+  es: `Por favor analiza el siguiente fit laboral:
+
+DESCRIPCIÓN DEL TRABAJO:
+{{jobDescription}}
+
+CV DE LA CANDIDATA:
+{{cvText}}
+
+Proporciona un análisis estructurado con:
+1. fitScore: número del 0-100
+2. fitSummary: resumen conciso del fit (2-3 frases)
+3. missingSkills: array de habilidades faltantes (máximo 5-6)
+4. payGapContext: contexto sobre brecha salarial relevante para este puesto
+5. salaryNegotiationTips: array de 3-4 tips de negociación
+6. coverLetter: carta de presentación personalizada
+
+Responde en formato JSON válido.`,
+
+  en: `Please analyze the following job fit:
+
+JOB DESCRIPTION:
+{{jobDescription}}
+
+CANDIDATE'S CV:
+{{cvText}}
+
+Provide a structured analysis with:
+1. fitScore: number from 0-100
+2. fitSummary: concise summary of the fit (2-3 sentences)
+3. missingSkills: array of missing skills (maximum 5-6)
+4. payGapContext: context about relevant pay gap for this position
+5. salaryNegotiationTips: array of 3-4 negotiation tips
+6. coverLetter: personalized cover letter
+
+Respond in valid JSON format.`
 };
 
 /**
@@ -45,13 +106,13 @@ function loadINEGIData(): { nacional: { brecha_pct: number; hombre: number; muje
 /**
  * Build system prompt with INEGI context for gender equity analysis
  */
-function buildSystemPrompt(inegiContext?: string): string {
-  const basePrompt = "You are FairHire, an AI career analyst focused on gender equity. Analyze the Job Description and CV provided. Return ONLY a valid JSON object with: fitScore (number 0-100), fitSummary (2 sentences in Spanish), missingSkills (array of 3-5 gaps in Spanish), payGapContext (gender pay gap for this role in Mexico in Spanish), salaryNegotiationTips (array of 3 tips in Spanish), coverLetter (3-paragraph cover letter in Spanish). Return ONLY valid JSON, no markdown.";
-  
+function buildSystemPrompt(language: 'es' | 'en', inegiContext?: string): string {
+  const basePrompt = SYSTEM_PROMPTS[language];
+
   if (inegiContext) {
     return `${basePrompt}\n\n${inegiContext}`;
   }
-  
+
   return basePrompt;
 }
 
@@ -83,7 +144,10 @@ const handler: Handler = async (event) => {
   }
 
   try {
-    const { jobDescription, cvText } = JSON.parse(event.body || "{}");
+    const { jobDescription, cvText, language = 'es' } = JSON.parse(event.body || "{}");
+
+    // Validate language parameter
+    const validLanguage = (language === 'es' || language === 'en') ? language : 'es';
 
     if (!jobDescription || !cvText) {
       return {
@@ -115,7 +179,13 @@ const handler: Handler = async (event) => {
 
     // Build system prompt with INEGI context
     const inegiContext = getINEGIContext();
-    const systemPrompt = buildSystemPrompt(inegiContext);
+    const systemPrompt = buildSystemPrompt(validLanguage, inegiContext);
+    
+    // Build user prompt with language-specific template
+    const userTemplate = USER_TEMPLATES[validLanguage];
+    const userMessage = userTemplate
+      .replace('{{jobDescription}}', jobDescription)
+      .replace('{{cvText}}', cvText);
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -131,7 +201,7 @@ const handler: Handler = async (event) => {
         messages: [
           {
             role: "user",
-            content: `Job Description:\n${jobDescription}\n\nCV:\n${cvText}`,
+            content: userMessage,
           },
         ],
       }),

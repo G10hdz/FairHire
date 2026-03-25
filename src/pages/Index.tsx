@@ -30,7 +30,10 @@ const Index = () => {
   const [results, setResults] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  // Get current language for API calls
+  const currentLanguage = i18n.language.split('-')[0]; // 'es' or 'en'
 
   // Fetch INEGI benchmark data (national level by default)
   const { data: benchmark, isLoading: isBenchmarkLoading } = useSalaryBenchmark({
@@ -43,7 +46,7 @@ const Index = () => {
     setError(null);
 
     try {
-      const analysisResult = await analyzeJobFitWithClaude(jobDescription, cvText);
+      const analysisResult = await analyzeJobFitWithClaude(jobDescription, cvText, currentLanguage);
       setResults(analysisResult);
       setShowResults(true);
       toast({
