@@ -1,0 +1,14 @@
+{
+  "title": "Analiza tu fit laboral",
+  "description": "Descubre qué tan bien encajas en un puesto, identifica brechas salariales de género, y obtén herramientas para negociar mejor.",
+  "form": {
+    "jobDescription": {
+      "title": "Descripción del Trabajo",
+      "description": "Pega aquí la descripción completa del trabajo al que quieres aplicar"
+    },
+    "cv": {
+      "title": "Tu CV/Currículum",
+      "description": "Pega el texto de tu CV o una descripción de tu experiencia profesional"
+    }
+  }
+}

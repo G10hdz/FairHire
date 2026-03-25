@@ -1,0 +1,18 @@
+{
+  "fitScore": {
+    "title": "Fit Score"
+  },
+  "missingSkills": {
+    "title": "Habilidades a Desarrollar",
+    "description": "Estas skills te ayudarían a mejorar tu fit para el puesto"
+  },
+  "payGap": {
+    "title": "Contexto de Brecha Salarial"
+  },
+  "salaryTips": {
+    "title": "Tips de Negociación Salarial"
+  },
+  "coverLetter": {
+    "title": "Carta Personalizada"
+  }
+}

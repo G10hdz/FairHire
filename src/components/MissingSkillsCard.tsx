@@ -1,17 +1,19 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface MissingSkillsCardProps {
   skills: string[];
 }
 
 export const MissingSkillsCard = ({ skills }: MissingSkillsCardProps) => {
+  const { t } = useTranslation();
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-secondary-foreground">Habilidades a Desarrollar</CardTitle>
+        <CardTitle className="text-secondary-foreground">{t("analysis.missingSkills.title")}</CardTitle>
         <CardDescription>
-          Estas skills te ayudarían a mejorar tu fit para el puesto
+          {t("analysis.missingSkills.description")}
         </CardDescription>
       </CardHeader>
       <CardContent>

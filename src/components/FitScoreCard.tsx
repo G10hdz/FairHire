@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface FitScoreCardProps {
   score: number;
@@ -7,6 +8,7 @@ interface FitScoreCardProps {
 }
 
 export const FitScoreCard = ({ score, summary }: FitScoreCardProps) => {
+  const { t } = useTranslation();
   const getScoreColor = (score: number) => {
     if (score >= 70) return "text-green-600";
     if (score >= 50) return "text-yellow-600";
@@ -22,7 +24,7 @@ export const FitScoreCard = ({ score, summary }: FitScoreCardProps) => {
   return (
     <Card className="text-center">
       <CardHeader>
-        <CardTitle className="text-primary">Fit Score</CardTitle>
+        <CardTitle className="text-primary">{t("analysis.fitScore.title")}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="relative w-40 h-40 mx-auto flex items-center justify-center">

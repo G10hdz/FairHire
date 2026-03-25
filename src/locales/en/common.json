@@ -1,0 +1,58 @@
+{
+  "app": {
+    "name": "FairHire",
+    "tagline": "Empowering women in tech",
+    "footer": "Made with 💜 to close the gender gap in tech",
+    "copyright": "© 2024 Positronica Labs • FairHire"
+  },
+  "language": {
+    "es": "Español",
+    "en": "English"
+  },
+  "actions": {
+    "analyze": "Analyze Fit & Pay Gap",
+    "analyzing": "Analyzing...",
+    "copy": "Copy",
+    "copied": "Copied",
+    "newAnalysis": "New analysis",
+    "cancel": "Cancel"
+  },
+  "placeholders": {
+    "jobDescription": "Example: Looking for Frontend Developer with experience in React, TypeScript, and agile methodologies...",
+    "cv": "Example: Frontend Developer with 3 years of experience. Specialized in React, JavaScript, CSS..."
+  },
+  "messages": {
+    "analysisComplete": "Analysis complete!",
+    "analysisCompleteDesc": "Your job fit analysis is ready.",
+    "analysisError": "Analysis error",
+    "copiedSuccess": "Copied!",
+    "copiedDesc": "Cover letter has been copied to clipboard.",
+    "copyError": "Error",
+    "copyErrorDesc": "Could not copy the letter. Please try again."
+  },
+  "errors": {
+    "generic": "Unknown error",
+    "analysisFailed": "Failed to analyze job fit",
+    "invalidResponse": "Invalid response format from API",
+    "requiredField": "This field is required"
+  },
+  "labels": {
+    "aiPowered": "AI-powered analysis",
+    "analysisCompleted": "Analysis Completed"
+  },
+  "benchmark": {
+    "title": "Salary Data",
+    "gap": "gap",
+    "whatIsGap": "What is the pay gap?",
+    "gapExplanation": "The gender pay gap represents the percentage difference between the average salary of men and women in a specific occupation. A positive gap indicates that men earn more on average.",
+    "highGapAlert": "Significant pay gap detected",
+    "highGapDescription": "In this occupation, women earn considerably less than men on average.",
+    "men": "Men",
+    "women": "Women",
+    "difference": "Difference",
+    "ratio": "W/M Ratio",
+    "mockData": "(Sample data)",
+    "methodologyNote": "INEGI ENOE data with national representative sample. Monthly net salaries in Mexican pesos.",
+    "noData": "Data not available for this occupation"
+  }
+}

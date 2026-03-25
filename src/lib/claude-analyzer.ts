@@ -1,3 +1,5 @@
+import i18n from '../i18n';
+
 export interface AnalysisResult {
   fitScore: number;
   fitSummary: string;
@@ -5,6 +7,17 @@ export interface AnalysisResult {
   payGapContext: string;
   salaryNegotiationTips: string[];
   coverLetter: string;
+}
+
+function getSystemPrompt(): string {
+  return i18n.t('prompts.analysis.system');
+}
+
+function getUserPrompt(jobDescription: string, cvText: string): string {
+  const template = i18n.t('prompts.analysis.userTemplate');
+  return template
+    .replace('{{jobDescription}}', jobDescription)
+    .replace('{{cvText}}', cvText);
 }
 
 export async function analyzeJobFitWithClaude(
@@ -17,7 +30,12 @@ export async function analyzeJobFitWithClaude(
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ jobDescription, cvText }),
+      body: JSON.stringify({
+        jobDescription,
+        cvText,
+        systemPrompt: getSystemPrompt(),
+        userPrompt: getUserPrompt(jobDescription, cvText),
+      }),
     });
 
     if (!response.ok) {
