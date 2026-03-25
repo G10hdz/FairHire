@@ -17,6 +17,12 @@ export const LanguageToggle = () => {
     i18n.changeLanguage(lng);
   };
 
+  // Flag emojis: Mexico for Spanish, US for English
+  const flags = {
+    es: "🇲🇽",
+    en: "🇺🇸",
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -35,14 +41,14 @@ export const LanguageToggle = () => {
           onClick={() => changeLanguage('es')}
           className={currentLanguage === 'es' ? 'bg-muted' : ''}
         >
-          <span className="mr-2">🇪🇸</span>
+          <span className="mr-2">{flags.es}</span>
           Español
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => changeLanguage('en')}
           className={currentLanguage === 'en' ? 'bg-muted' : ''}
         >
-          <span className="mr-2">🇺🇸</span>
+          <span className="mr-2">{flags.en}</span>
           English
         </DropdownMenuItem>
       </DropdownMenuContent>
