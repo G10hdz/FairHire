@@ -1,7 +1,7 @@
 import type { Handler } from "@netlify/functions";
 
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-20250514";
-const MAX_INPUT_LENGTH = 5000;
+const MAX_INPUT_LENGTH = 10000;
 
 const CORS_HEADERS = {
   "Content-Type": "application/json",
