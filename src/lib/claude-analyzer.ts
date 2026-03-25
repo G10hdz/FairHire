@@ -9,20 +9,10 @@ export interface AnalysisResult {
   coverLetter: string;
 }
 
-function getSystemPrompt(): string {
-  return i18n.t('prompts.analysis.system');
-}
-
-function getUserPrompt(jobDescription: string, cvText: string): string {
-  const template = i18n.t('prompts.analysis.userTemplate');
-  return template
-    .replace('{{jobDescription}}', jobDescription)
-    .replace('{{cvText}}', cvText);
-}
-
 export async function analyzeJobFitWithClaude(
   jobDescription: string,
-  cvText: string
+  cvText: string,
+  language: string = 'es'
 ): Promise<AnalysisResult> {
   const makeRequest = async (): Promise<AnalysisResult> => {
     const response = await fetch('/.netlify/functions/analyze', {
@@ -33,8 +23,7 @@ export async function analyzeJobFitWithClaude(
       body: JSON.stringify({
         jobDescription,
         cvText,
-        systemPrompt: getSystemPrompt(),
-        userPrompt: getUserPrompt(jobDescription, cvText),
+        language,
       }),
     });
 
