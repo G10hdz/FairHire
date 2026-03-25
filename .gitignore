@@ -22,8 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
 # Local environment variables
 .env
 .env.*
+!.env.example
 .netlify
 .netlify*
+
+# Bun package manager (using npm instead)
+bun.lock
+bun.lockb
