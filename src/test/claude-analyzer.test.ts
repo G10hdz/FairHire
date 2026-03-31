@@ -31,7 +31,7 @@ describe("claude-analyzer API client", () => {
     await analyzeJobFitWithClaude(mockJobDescription, mockCvText);
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "/.netlify/functions/analyze",
+      "/api/analyze",
       expect.objectContaining({
         method: "POST",
         headers: {
@@ -40,6 +40,7 @@ describe("claude-analyzer API client", () => {
         body: JSON.stringify({
           jobDescription: mockJobDescription,
           cvText: mockCvText,
+          language: "es",
         }),
       })
     );

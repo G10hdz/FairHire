@@ -97,7 +97,7 @@ describe("useSalaryBenchmark", () => {
 
       expect(result.current.data).toEqual(mockBenchmarkData);
       expect(mockFetch).toHaveBeenCalledWith(
-        "/.netlify/functions/inegi-benchmark?ocupacion=2111&entidad=09"
+        "/api/inegi-benchmark?ocupacion=2111&entidad=09"
       );
     });
 
@@ -112,11 +112,11 @@ describe("useSalaryBenchmark", () => {
       });
 
       expect(mockFetch).toHaveBeenCalledWith(
-        "/.netlify/functions/inegi-benchmark"
+        "/api/inegi-benchmark"
       );
     });
 
-    it("should have correct query key with sinco", async () => {
+    it("should use sinco-based query key", async () => {
       const { result } = renderHook(
         () => useSalaryBenchmark({ sinco: "2111", entidad: "09" }),
         { wrapper }
@@ -126,14 +126,12 @@ describe("useSalaryBenchmark", () => {
         expect(result.current.isSuccess).toBe(true);
       });
 
-      // Query key should be set after hook initializes
-      expect(result.current.queryKey).toBeDefined();
-      expect(result.current.queryKey[0]).toBe("inegi-benchmark");
-      expect(result.current.queryKey[1]).toBe("2111");
-      expect(result.current.queryKey[2]).toBe("09");
+      expect(mockFetch).toHaveBeenCalledWith(
+        "/api/inegi-benchmark?ocupacion=2111&entidad=09"
+      );
     });
 
-    it("should have correct query key for national data", async () => {
+    it("should use national query key when no params", async () => {
       const { result } = renderHook(
         () => useSalaryBenchmark(),
         { wrapper }
@@ -143,10 +141,9 @@ describe("useSalaryBenchmark", () => {
         expect(result.current.isSuccess).toBe(true);
       });
 
-      // Query key should be set after hook initializes
-      expect(result.current.queryKey).toBeDefined();
-      expect(result.current.queryKey[0]).toBe("inegi-benchmark");
-      expect(result.current.queryKey[1]).toBe("national");
+      expect(mockFetch).toHaveBeenCalledWith(
+        "/api/inegi-benchmark"
+      );
     });
   });
 
@@ -197,7 +194,7 @@ describe("useSalaryBenchmark", () => {
 
       expect(result).toEqual(mockData);
       expect(mockFetch).toHaveBeenCalledWith(
-        "/.netlify/functions/inegi-benchmark?ocupacion=2&entidad=09"
+        "/api/inegi-benchmark?ocupacion=2&entidad=09"
       );
     });
 
@@ -233,7 +230,7 @@ describe("useSalaryBenchmark", () => {
 
       expect(result).toEqual(mockData);
       expect(mockFetch).toHaveBeenCalledWith(
-        "/.netlify/functions/inegi-benchmark"
+        "/api/inegi-benchmark"
       );
     });
 

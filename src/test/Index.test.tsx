@@ -130,7 +130,8 @@ describe("Index Page", () => {
     // Verify API was called
     expect(analyzeJobFitWithClaude).toHaveBeenCalledWith(
       "Senior Frontend Developer position",
-      "Frontend Developer with 3 years experience"
+      "Frontend Developer with 3 years experience",
+      expect.any(String)
     );
 
     // Verify results are displayed

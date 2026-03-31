@@ -1,4 +1,5 @@
 import i18n from '../i18n';
+import { retryWithBackoff } from './utils';
 
 export interface AnalysisResult {
   fitScore: number;
@@ -15,7 +16,7 @@ export async function analyzeJobFitWithClaude(
   language: string = 'es'
 ): Promise<AnalysisResult> {
   const makeRequest = async (): Promise<AnalysisResult> => {
-    const response = await fetch('/.netlify/functions/analyze', {
+    const response = await fetch('/api/analyze', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

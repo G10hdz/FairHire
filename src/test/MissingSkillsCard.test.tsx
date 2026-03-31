@@ -1,8 +1,13 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MissingSkillsCard } from "@/components/MissingSkillsCard";
+import i18n from "@/i18n";
 
 describe("MissingSkillsCard", () => {
+  beforeEach(async () => {
+    await i18n.changeLanguage("es");
+  });
+
   it("renders the component with title and description", () => {
     render(<MissingSkillsCard skills={[]} />);
     

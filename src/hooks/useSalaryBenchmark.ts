@@ -74,7 +74,7 @@ export async function getBenchmarkForSINCO(
       params.set("entidad", entidad);
     }
 
-    const response = await fetch(`/.netlify/functions/inegi-benchmark?${params.toString()}`);
+    const response = await fetch(`/api/inegi-benchmark?${params.toString()}`);
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
@@ -93,7 +93,7 @@ export async function getBenchmarkForSINCO(
  */
 export async function getNationalBenchmark(): Promise<BenchmarkResponse> {
   try {
-    const response = await fetch("/.netlify/functions/inegi-benchmark");
+    const response = await fetch("/api/inegi-benchmark");
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
@@ -117,7 +117,7 @@ async function fetchBenchmark(params?: UseSalaryBenchmarkParams): Promise<Benchm
       searchParams.set("entidad", params.entidad);
     }
 
-    const url = `/.netlify/functions/inegi-benchmark${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
+    const url = `/api/inegi-benchmark${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
     const response = await fetch(url);
 
     if (!response.ok) {
