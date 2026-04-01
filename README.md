@@ -1,9 +1,10 @@
 # 💜 FairHire by Positronica Labs
 
 ![Deployed on Netlify](https://img.shields.io/badge/Deployed-Netlify-00C7B7?style=for-the-badge&logo=netlify)
+![Mirror on Vercel](https://img.shields.io/badge/Mirror-Vercel-000000?style=for-the-badge&logo=vercel)
 ![Bootstrapped with Lovable](https://img.shields.io/badge/Bootstrapped_with-Lovable-FF4F00?style=for-the-badge)
 ![Built with React](https://img.shields.io/badge/React-TypeScript-61DAFB?style=for-the-badge&logo=react)
-![Powered by Claude](https://img.shields.io/badge/AI-Claude_3.5_Sonnet-D97757?style=for-the-badge&logo=anthropic)
+![Powered by Claude](https://img.shields.io/badge/AI-Claude_Sonnet_4-D97757?style=for-the-badge&logo=anthropic)
 
 🌎 **[ 🇺🇸 Read in English ](#english-version) | [ 🇲🇽 Leer en Español ](#versión-en-español)**
 
@@ -20,19 +21,23 @@ Construido como el primer producto en producción para **Positronica Labs** dura
 
 ### 🎯 ¿Qué hace?
 Las usuarias simplemente pegan la descripción de una vacante y el texto de su CV para obtener un análisis instantáneo y accionable:
+* **Onboarding guiado:** Modal paso a paso para nuevas usuarias — explica qué esperar antes de analizar.
 * **Fit Score:** Una calificación visual (sobre 100) que evalúa el alineamiento con el rol.
 * **Brecha de Habilidades:** Identificación clara de las *skills* faltantes para el puesto.
 * **Contexto de Brecha Salarial:** Datos reales sobre la disparidad salarial de género para ese rol específico en México.
 * **Estrategia de Negociación:** Tips personalizados para negociar el salario, basados en la experiencia de la candidata.
 * **Carta de Presentación:** Un borrador generado por IA, altamente personalizado para la vacante y el perfil.
+* **¿Cómo funciona?:** Sección colapsable en la interfaz que explica el proceso en 3 pasos — sin salir de la página.
 
 ### 🛠️ Stack Tecnológico & Arquitectura
 * **AI Code Generation:** Lovable (UI & Frontend Bootstrap).
-* **Frontend:** React, TypeScript, Tailwind CSS, shadcn/ui, Vite.
-* **Backend:** Netlify Serverless Functions (`netlify/functions/analyze.ts`).
-* **Modelo de IA:** Anthropic `claude-sonnet-4-20250514` (Claude 3.5 Sonnet).
-* **Despliegue:** Netlify (Auto-deploy desde la rama `main`).
-* **Diseño:** Deep Purple (`#1a0533`), Electric Violet (`#7c3aed`), Rose Gold (`#e8b4b8`).
+* **Frontend:** React 18, TypeScript, Tailwind CSS, shadcn/ui, Vite, i18next (ES/EN).
+* **Backend:** Netlify Serverless Functions (`netlify/functions/`) — fuente de verdad. Mirror en Vercel (`api/`).
+* **Modelo de IA:** Anthropic `claude-sonnet-4-20250514` (Claude Sonnet 4).
+* **Despliegue primario:** Netlify (auto-deploy desde `main`) → https://fairfit-ai.netlify.app
+* **Despliegue espejo:** Vercel (rama `main`)
+* **CI/CD:** GitHub Actions — code review automático y asistente de PR en cada pull request.
+* **Diseño:** Deep Purple (`#1a0533`), Electric Violet (`#7c3aed`), Rose Gold (`#e8b4b8`). Light + dark mode.
 
 #### ⚡ El Reto Técnico: Superando el colapso de servidores
 Durante el evento global de SheBuilds, los servidores de la plataforma principal colapsaron debido a la masiva demanda simultánea. Además, las políticas estrictas de CORS bloqueaban las llamadas directas desde el navegador a la API de Anthropic.
@@ -108,10 +113,14 @@ Response:
 2. `cd fairfit-ai`
 3. `npm install`
 4. Crea un archivo `.env` en la raíz y agrega: `ANTHROPIC_API_KEY=tu_api_key_aqui`
-5. `npx netlify dev --target-port 8080`
+5. Con Netlify: `npx netlify dev --target-port 8080`  
+   Con Vercel: `vercel dev`
 
-### 🛣️ Roadmap (v2)
-- [ ✓] **Soporte Bilingüe:** Toggle para cambiar la interfaz y los prompts entre Español e Inglés.
+### 🛣️ Roadmap
+- [x] **Soporte Bilingüe:** Toggle ES/EN — interfaz y prompts completamente traducidos.
+- [x] **Datos INEGI-ENOE:** Benchmarks salariales con perspectiva de género por ocupación y entidad.
+- [x] **Onboarding:** Modal guiado para nuevas usuarias.
+- [x] **Deploy dual:** Netlify (primario) + Vercel (espejo).
 - [ ] **Mejoras UI:** Animaciones más fluidas para el *Fit Score* circular.
 - [ ] **Bring Your Own Key (BYOK):** Permitir a las usuarias ingresar su propia API Key de Anthropic.
 
@@ -128,19 +137,23 @@ Built as the first production product for **Positronica Labs** during the **SheB
 
 ### 🎯 What does it do?
 Users simply paste a job description and the text of their CV to receive an instant, actionable analysis:
+* **Guided Onboarding:** Step-by-step modal for first-time users — sets expectations before the analysis runs.
 * **Fit Score:** A visual rating (out of 100) that evaluates alignment with the role.
 * **Skill Gap:** Clear identification of the missing skills required for the position.
 * **Gender Pay Gap Context:** Real data on gender pay disparity for that specific role in Mexico.
 * **Negotiation Strategy:** Personalized tips for negotiating salary based on the candidate’s experience.
 * **Cover Letter:** An AI-generated draft, highly personalized for the job opening and candidate profile.
+* **How It Works:** Collapsible 3-step explainer embedded in the UI — no need to leave the page.
 
 ### 🛠️ Tech Stack & Architecture
 * **AI Code Generation:** Lovable (UI & Frontend Bootstrap).
-* **Frontend:** React, TypeScript, Tailwind CSS, shadcn/ui, Vite.
-* **Backend:** Netlify Serverless Functions (`netlify/functions/analyze.ts`).
-* **AI Model:** Anthropic `claude-sonnet-4-20250514` (Claude 3.5 Sonnet).
-* **Deployment:** Netlify (Auto-deploy from the `main` branch).
-* **Design:** Deep Purple (`#1a0533`), Electric Violet (`#7c3aed`), Rose Gold (`#e8b4b8`).
+* **Frontend:** React 18, TypeScript, Tailwind CSS, shadcn/ui, Vite, i18next (ES/EN).
+* **Backend:** Netlify Serverless Functions (`netlify/functions/`) — source of truth. Mirrored on Vercel (`api/`).
+* **AI Model:** Anthropic `claude-sonnet-4-20250514` (Claude Sonnet 4).
+* **Primary Deployment:** Netlify (auto-deploy from `main`) → https://fairfit-ai.netlify.app
+* **Mirror Deployment:** Vercel (`main` branch)
+* **CI/CD:** GitHub Actions — automated code review and PR assistant on every pull request.
+* **Design:** Deep Purple (`#1a0533`), Electric Violet (`#7c3aed`), Rose Gold (`#e8b4b8`). Light + dark mode.
 
 #### ⚡ The Technical Challenge: Overcoming server collapse
 During the global SheBuilds event, the main platform's servers collapsed due to massive simultaneous demand. Additionally, strict CORS policies blocked direct browser calls to the Anthropic API.
@@ -216,10 +229,14 @@ Response:
 2. `cd fairfit-ai`
 3. `npm install`
 4. Create a `.env` file in the root and add: `ANTHROPIC_API_KEY=your_api_key_here`
-5. `npx netlify dev --target-port 8080`
+5. With Netlify: `npx netlify dev --target-port 8080`  
+   With Vercel: `vercel dev`
 
-### 🛣️ Roadmap (v2)
-- [ ✓] **Bilingual Support:** Toggle to switch the interface and prompts between Spanish and English.
+### 🛣️ Roadmap
+- [x] **Bilingual Support:** ES/EN toggle — fully translated interface and prompts.
+- [x] **INEGI-ENOE Data:** Gender-aware salary benchmarks by occupation and state.
+- [x] **Onboarding:** Guided modal for first-time users.
+- [x] **Dual Deploy:** Netlify (primary) + Vercel (mirror).
 - [ ] **UI Improvements:** Smoother animations for the circular Fit Score.
 - [ ] **Bring Your Own Key (BYOK):** Allow users to enter their own Anthropic API Key.
 
