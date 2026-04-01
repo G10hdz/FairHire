@@ -35,7 +35,7 @@ Las usuarias simplemente pegan la descripción de una vacante y el texto de su C
 * **Backend:** Netlify Serverless Functions (`netlify/functions/`) — fuente de verdad. Mirror en Vercel (`api/`).
 * **Modelo de IA:** Anthropic `claude-sonnet-4-20250514` (Claude Sonnet 4).
 * **Despliegue primario:** Netlify (auto-deploy desde `main`) → https://fairfit-ai.netlify.app
-* **Despliegue espejo:** Vercel (rama `main`)
+* **Despliegue espejo:** Vercel (rama `main`) → https://fairhire-sigma.vercel.app
 * **CI/CD:** GitHub Actions — code review automático y asistente de PR en cada pull request.
 * **Diseño:** Deep Purple (`#1a0533`), Electric Violet (`#7c3aed`), Rose Gold (`#e8b4b8`). Light + dark mode.
 
@@ -151,7 +151,7 @@ Users simply paste a job description and the text of their CV to receive an inst
 * **Backend:** Netlify Serverless Functions (`netlify/functions/`) — source of truth. Mirrored on Vercel (`api/`).
 * **AI Model:** Anthropic `claude-sonnet-4-20250514` (Claude Sonnet 4).
 * **Primary Deployment:** Netlify (auto-deploy from `main`) → https://fairfit-ai.netlify.app
-* **Mirror Deployment:** Vercel (`main` branch)
+* **Mirror Deployment:** Vercel (`main` branch) → https://fairhire-sigma.vercel.app
 * **CI/CD:** GitHub Actions — automated code review and PR assistant on every pull request.
 * **Design:** Deep Purple (`#1a0533`), Electric Violet (`#7c3aed`), Rose Gold (`#e8b4b8`). Light + dark mode.
 
