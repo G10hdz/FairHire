@@ -8,10 +8,5 @@
     "api/*.ts": {
       "runtime": "nodejs20.x"
     }
-  },
-  "env": {
-    "ANTHROPIC_API_KEY": "@anthropic-api-key",
-    "ANTHROPIC_MODEL": "claude-sonnet-4-20250514",
-    "INEGI_DATA_PATH": "./api/data/salary_benchmarks.json"
   }
 }
