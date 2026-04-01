@@ -64,7 +64,7 @@ describe("Index Page", () => {
   it("disables analyze button when inputs are empty", () => {
     render(<Index />);
 
-    const analyzeButton = screen.getByText(/Analizar Fit|Analyze Fit/i);
+    const analyzeButton = screen.getByRole("button", { name: /Analizar Fit|Analyze Fit/i });
     expect(analyzeButton).toBeDisabled();
   });
 
@@ -85,7 +85,7 @@ describe("Index Page", () => {
       target: { value: "CV text" },
     });
 
-    const analyzeButton = screen.getByText(/Analizar Fit|Analyze Fit/i);
+    const analyzeButton = screen.getByRole("button", { name: /Analizar Fit|Analyze Fit/i });
     expect(analyzeButton).not.toBeDisabled();
   });
 
@@ -112,10 +112,10 @@ describe("Index Page", () => {
     );
 
     fireEvent.change(jobDescTextarea, {
-      target: { value: "Senior Frontend Developer position" },
+      target: { value: "Senior Frontend Developer position with React and TypeScript. We are looking for an experienced developer to join our team." },
     });
     fireEvent.change(cvTextarea, {
-      target: { value: "Frontend Developer with 3 years experience" },
+      target: { value: "Frontend Developer with 3 years of experience in React, TypeScript, and modern web technologies." },
     });
 
     // Click analyze button
@@ -129,8 +129,8 @@ describe("Index Page", () => {
 
     // Verify API was called
     expect(analyzeJobFitWithClaude).toHaveBeenCalledWith(
-      "Senior Frontend Developer position",
-      "Frontend Developer with 3 years experience",
+      "Senior Frontend Developer position with React and TypeScript. We are looking for an experienced developer to join our team.",
+      "Frontend Developer with 3 years of experience in React, TypeScript, and modern web technologies.",
       expect.any(String)
     );
 
@@ -157,19 +157,18 @@ describe("Index Page", () => {
     );
 
     fireEvent.change(jobDescTextarea, {
-      target: { value: "Job description" },
+      target: { value: "Senior Frontend Developer position with React and TypeScript. We are looking for an experienced developer to join our team and work on challenging projects. Must have 5+ years of experience." },
     });
     fireEvent.change(cvTextarea, {
-      target: { value: "CV text" },
+      target: { value: "Frontend Developer with 3 years of experience in React, TypeScript, and modern web technologies. I have worked on multiple projects and delivered high-quality code." },
     });
 
     const analyzeButton = screen.getByText(/Analizar Fit|Analyze Fit/i);
     fireEvent.click(analyzeButton);
 
-    // The error message is displayed in an alert div
+    // Wait for the error toast message
     await waitFor(() => {
-      expect(screen.getByRole("alert")).toBeInTheDocument();
-      expect(screen.getByText("API key not configured")).toBeInTheDocument();
+      expect(screen.getByText(/No pudimos conectar con el servicio|API key not configured/i)).toBeInTheDocument();
     }, { timeout: 2000 });
   });
 
@@ -195,8 +194,8 @@ describe("Index Page", () => {
       /Ejemplo: Frontend Developer con 3 años|Example: Frontend Developer with 3 years/i
     );
 
-    fireEvent.change(jobDescTextarea, { target: { value: "Job" } });
-    fireEvent.change(cvTextarea, { target: { value: "CV" } });
+    fireEvent.change(jobDescTextarea, { target: { value: "Senior Frontend Developer position with React and TypeScript. We are looking for an experienced developer to join our team." } });
+    fireEvent.change(cvTextarea, { target: { value: "Frontend Developer with 3 years of experience in React, TypeScript, and modern web technologies." } });
 
     fireEvent.click(screen.getByText(/Analizar Fit|Analyze Fit/i));
 

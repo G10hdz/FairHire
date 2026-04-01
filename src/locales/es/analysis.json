@@ -14,5 +14,12 @@
   },
   "coverLetter": {
     "title": "Carta Personalizada"
+  },
+  "summary": {
+    "encouragement": "Tu perfil tiene valor. Esta análisis te da herramientas para negociar con confianza y datos reales."
+  },
+  "sections": {
+    "insights": "Insights (Contexto y Datos)",
+    "actions": "Acciones (Herramientas para Seguir)"
   }
 }

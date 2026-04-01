@@ -14,5 +14,12 @@
   },
   "coverLetter": {
     "title": "Custom Cover Letter"
+  },
+  "summary": {
+    "encouragement": "Your profile has value. This analysis gives you tools to negotiate with confidence and real data."
+  },
+  "sections": {
+    "insights": "Insights (Context & Data)",
+    "actions": "Actions (Tools for Next Steps)"
   }
 }

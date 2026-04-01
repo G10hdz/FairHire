@@ -15,7 +15,10 @@
     "copy": "Copiar",
     "copied": "Copiado",
     "newAnalysis": "Nuevo análisis",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "skip": "Saltar",
+    "close": "Cerrar",
+    "learnMore": "Saber más"
   },
   "placeholders": {
     "jobDescription": "Ejemplo: Buscamos Frontend Developer con experiencia en React, TypeScript, y metodologías ágiles...",
@@ -54,5 +57,57 @@
     "mockData": "(Datos de muestra)",
     "methodologyNote": "Datos INEGI ENOE con muestra representativa nacional. Salarios mensuales netos en pesos mexicanos.",
     "noData": "Datos no disponibles para esta ocupación"
+  },
+  "onboarding": {
+    "modal": {
+      "title": "Bienvenida a FairHire",
+      "subtitle": "Tu aliada para negociar con confianza",
+      "description": "FairHire analiza tu perfil contra descripciones de trabajo y te da datos reales para negociar tu salario con confianza.",
+      "step1": {
+        "title": "Pega la vacante",
+        "description": "Copia la descripción completa del trabajo al que quieres aplicar"
+      },
+      "step2": {
+        "title": "Pega tu CV",
+        "description": "Tu experiencia, habilidades y logros profesionales"
+      },
+      "step3": {
+        "title": "Obtén tu análisis",
+        "description": "Recibe un Fit Score, identifica habilidades a desarrollar, conoce la brecha salarial y obtén tips de negociación"
+      },
+      "fitScore": {
+        "title": "¿Qué es el Fit Score?",
+        "explanation": "El Fit Score es una métrica del 0-100 que compara tu perfil con los requisitos de la vacante. Usa IA para analizar habilidades, experiencia y palabras clave.",
+        "interpretation": {
+          "high": "80-100: Excelente match — aplica con confianza",
+          "medium": "50-79: Buen match — destaca tus fortalezas en la entrevista",
+          "low": "0-49: Match bajo — considera desarrollar las habilidades faltantes"
+        },
+        "note": "El Fit Score es una guía, no una regla. ¡Muchas mujeres obtienen ofertas con scores de 60-70!"
+      },
+      "dataPrivacy": {
+        "title": "Tus datos están seguros",
+        "description": "No almacenamos tu CV ni las vacantes que analizas. Todo el procesamiento es temporal."
+      },
+      "cta": "Comenzar análisis",
+      "skip": "Explorar por mi cuenta"
+    },
+    "howItWorks": {
+      "title": "¿Cómo funciona?",
+      "subtitle": "Análisis laboral en 3 pasos",
+      "step1": {
+        "title": "Vacante",
+        "description": "Pega la descripción del trabajo"
+      },
+      "step2": {
+        "title": "Tu perfil",
+        "description": "Pega tu CV o experiencia"
+      },
+      "step3": {
+        "title": "Análisis",
+        "description": "Obtén fit score, brecha salarial y herramientas"
+      },
+      "close": "Cerrar"
+    }
   }
 }

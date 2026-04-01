@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +13,9 @@ import { PayGapCard } from "@/components/PayGapCard";
 import { SalaryTipsCard } from "@/components/SalaryTipsCard";
 import { CoverLetterCard } from "@/components/CoverLetterCard";
 import { LanguageToggle } from "@/components/LanguageToggle/LanguageToggle";
-import { AlertTriangle } from "lucide-react";
+import { OnboardingModal } from "@/components/OnboardingModal";
+import { HowItWorks } from "@/components/HowItWorks";
+import { AlertTriangle, ClipboardList, FileText, Sparkles } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useSalaryBenchmark, getSINCODivision } from "@/hooks/useSalaryBenchmark";
 
@@ -29,8 +31,18 @@ const Index = () => {
   const [showResults, setShowResults] = useState(false);
   const [results, setResults] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const { toast } = useToast();
   const { t, i18n } = useTranslation();
+
+  // Show onboarding on first visit
+  useEffect(() => {
+    const hasSeenOnboarding = localStorage.getItem("fairhire-onboarding-seen");
+    if (!hasSeenOnboarding) {
+      // Small delay to ensure page is loaded
+      setTimeout(() => setShowOnboarding(true), 500);
+    }
+  }, []);
 
   // Get current language for API calls
   const currentLanguage = i18n.language.split('-')[0]; // 'es' or 'en'
@@ -42,6 +54,36 @@ const Index = () => {
   });
 
   const handleAnalyze = async () => {
+    if (!jobDescription.trim() || !cvText.trim()) {
+      setError("Por favor ingresa tanto la descripción del trabajo como tu CV");
+      toast({
+        title: "Falta información",
+        description: "Necesitamos ambos textos para hacer el análisis",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (jobDescription.length < 50) {
+      setError("La descripción del trabajo es muy corta (mínimo 50 palabras)");
+      toast({
+        title: "Descripción muy corta",
+        description: "Copia la descripción completa para un análisis más preciso",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (cvText.length < 50) {
+      setError("Tu CV es muy corto (mínimo 50 palabras)");
+      toast({
+        title: "CV muy corto",
+        description: "Incluye más detalles sobre tu experiencia para un mejor análisis",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsAnalyzing(true);
     setError(null);
 
@@ -51,11 +93,15 @@ const Index = () => {
       setShowResults(true);
       toast({
         title: t("messages.analysisComplete"),
-        description: t("messages.analysisCompleteDesc"),
+        description: "✨ Tu análisis está listo — revisa tus insights y herramientas abajo",
       });
     } catch (error) {
       console.error("Analysis error:", error);
-      const errorMessage = error instanceof Error ? error.message : t("errors.generic");
+      const errorMessage = error instanceof Error 
+        ? error.message.includes("API") 
+          ? "No pudimos conectar con el servicio de análisis. Verifica tu conexión e intenta de nuevo."
+          : error.message
+        : "Ocurrió un error inesperado. Inténtalo de nuevo en unos momentos.";
       setError(errorMessage);
       toast({
         title: t("messages.analysisError"),
@@ -92,12 +138,17 @@ const Index = () => {
           /* Input Form */
           <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-4">
-              <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              <h2 className="text-4xl md:text-6xl font-bold text-foreground">
                 {t("home.title")}
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 {t("home.description")}
               </p>
+            </div>
+
+            {/* How it works - Expandable section */}
+            <div className="max-w-2xl mx-auto">
+              <HowItWorks />
             </div>
 
             {error && (
@@ -111,7 +162,7 @@ const Index = () => {
               <Card className="border-2 border-primary/20 hover:border-primary/40 transition-colors">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-primary">
-                    <span className="text-2xl">📋</span>
+                    <ClipboardList className="w-6 h-6" />
                     {t("home.form.jobDescription.title")}
                   </CardTitle>
                   <CardDescription>
@@ -131,7 +182,7 @@ const Index = () => {
               <Card className="border-2 border-secondary/40 hover:border-secondary/60 transition-colors">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-secondary-foreground">
-                    <span className="text-2xl">👩‍💼</span>
+                    <FileText className="w-6 h-6" />
                     {t("home.form.cv.title")}
                   </CardTitle>
                   <CardDescription>
@@ -153,7 +204,7 @@ const Index = () => {
               <Button
                 onClick={handleAnalyze}
                 disabled={!jobDescription.trim() || !cvText.trim() || isAnalyzing}
-                className="px-12 py-3 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="px-12 py-3 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-all hover:scale-105 active:scale-95"
               >
                 {isAnalyzing ? (
                   <div className="flex items-center gap-2">
@@ -161,7 +212,10 @@ const Index = () => {
                     {t("actions.analyzing")}
                   </div>
                 ) : (
-                  t("actions.analyze")
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5" />
+                    {t("actions.analyze")}
+                  </div>
                 )}
               </Button>
               <p className="text-sm text-muted-foreground mt-2">
@@ -171,9 +225,13 @@ const Index = () => {
           </div>
         ) : (
           /* Results */
-          <div className="max-w-6xl mx-auto space-y-8">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-primary mb-2">{t("labels.analysisCompleted")}</h2>
+          <div className="max-w-6xl mx-auto space-y-12">
+            {/* Header with empowerment message */}
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-bold text-primary">{t("labels.analysisCompleted")}</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                {t("analysis.summary.encouragement")}
+              </p>
               <Button
                 variant="outline"
                 onClick={() => {
@@ -188,54 +246,83 @@ const Index = () => {
             </div>
 
             {results && (
-              <div className="grid lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-1">
-                  <FitScoreCard score={results.fitScore} summary={results.fitSummary} />
-                </div>
-                <div className="lg:col-span-2">
-                  <MissingSkillsCard skills={results.missingSkills} />
-                </div>
-                <div className="lg:col-span-3">
-                  <PayGapCard context={results.payGapContext} />
-                </div>
-                <div className="lg:col-span-3">
-                  {isBenchmarkLoading ? (
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                          {t("benchmark.title")}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          <div className="h-4 bg-muted rounded animate-pulse" />
-                          <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ) : benchmark ? (
-                    <Suspense fallback={
+              <>
+                {/* Section 1: Insights (Context & Data) */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="h-px flex-1 bg-border" />
+                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                      {t("analysis.sections.insights")}
+                    </h3>
+                    <div className="h-px flex-1 bg-border" />
+                  </div>
+
+                  {/* Pay Gap Context - Lead with systemic validation */}
+                  <div className="grid gap-6">
+                    <PayGapCard context={results.payGapContext} />
+                    
+                    {/* INEGI Salary Benchmark Data */}
+                    {isBenchmarkLoading ? (
                       <Card>
                         <CardHeader>
-                          <CardTitle>{t("benchmark.title")}</CardTitle>
+                          <CardTitle className="flex items-center gap-2">
+                            <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                            {t("benchmark.title")}
+                          </CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <div className="h-20 bg-muted rounded animate-pulse" />
+                          <div className="space-y-3">
+                            <div className="h-4 bg-muted rounded animate-pulse" />
+                            <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
+                          </div>
                         </CardContent>
                       </Card>
-                    }>
-                      <SalaryBenchmark data={benchmark} />
-                    </Suspense>
-                  ) : null}
-                </div>
-                <div className="lg:col-span-2">
-                  <SalaryTipsCard tips={results.salaryNegotiationTips} />
-                </div>
-                <div className="lg:col-span-1">
-                  <CoverLetterCard coverLetter={results.coverLetter} />
-                </div>
-              </div>
+                    ) : benchmark ? (
+                      <Suspense fallback={
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>{t("benchmark.title")}</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="h-20 bg-muted rounded animate-pulse" />
+                          </CardContent>
+                        </Card>
+                      }>
+                        <SalaryBenchmark data={benchmark} />
+                      </Suspense>
+                    ) : null}
+                  </div>
+
+                  {/* Fit Score - Reframed as growth metric */}
+                  <div className="grid lg:grid-cols-2 gap-6">
+                    <FitScoreCard score={results.fitScore} summary={results.fitSummary} />
+                    <MissingSkillsCard skills={results.missingSkills} />
+                  </div>
+                </section>
+
+                {/* Section 2: Actions (Tools for Next Steps) */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="h-px flex-1 bg-border" />
+                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                      {t("analysis.sections.actions")}
+                    </h3>
+                    <div className="h-px flex-1 bg-border" />
+                  </div>
+
+                  <div className="grid lg:grid-cols-3 gap-6">
+                    {/* Salary Tips - Actionable negotiation guidance */}
+                    <div className="lg:col-span-2">
+                      <SalaryTipsCard tips={results.salaryNegotiationTips} />
+                    </div>
+                    
+                    {/* Cover Letter - Ready-to-use artifact */}
+                    <div className="lg:col-span-1">
+                      <CoverLetterCard coverLetter={results.coverLetter} />
+                    </div>
+                  </div>
+                </section>
+              </>
             )}
           </div>
         )}
@@ -266,6 +353,18 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* Onboarding Modal */}
+      <OnboardingModal
+        open={showOnboarding}
+        onOpenChange={setShowOnboarding}
+        onGetStarted={() => {
+          // Scroll to first input field
+          const firstTextarea = document.querySelector('textarea');
+          firstTextarea?.focus();
+        }}
+      />
+
       <Toaster />
     </div>
   );

@@ -1,0 +1,120 @@
+/home/gio/Downloads/process_enoe.py
+
+ Tarea: Integrar datos ENOE de INEGI en FairHire
+
+## Contexto:
+Ya tengo un script `process_enoe.py`/home/gio/Downloads/process_enoe.py que procesa microdatos de la ENOE y genera `salary_benchmarks.json` con:
+- Brecha salarial nacional por género
+- Brecha por división de ocupación SINCO (9 categorías)
+- Datos específicos de CDMX
+- Formato: { fuente, trimestre, moneda, datos: { nacional, por_ocupacion, cdmx } }
+
+## Lo que necesito implementar:
+
+### 1. Netlify Function: `/netlify/functions/inegi-benchmark.ts`
+**Endpoint:** GET `/api/inegi-benchmark?ocupacion={sinco_code}&entidad={ent_code}`
+
+**Requisitos:**
+- Leer `salary_benchmarks.json` desde el filesystem (o usar datos mock si no existe)
+- Si `ocupacion` no se proporciona, retornar solo datos nacionales
+- Si `entidad=09`, incluir datos CDMX específicos
+- Agregar caching HTTP (Cache-Control: public, max-age=604800) → 7 días
+- Response type:
+```typescript
+interface BenchmarkResponse {
+  ocupacion?: string;
+  salario_promedio_hombre: number;
+  salario_promedio_mujer: number;
+  brecha_porcentaje: number;
+  fuente: string;
+  trimestre: string;
+  es_nacional: boolean;
+  muestra_suficiente: boolean;
+}
+```
+
+### 2. Hook React: `src/hooks/useSalaryBenchmark.ts`
+**Usar React Query** con:
+- Cache de 7 días (staleTime: 604800000)
+- Fallback a datos mock si el endpoint falla
+- Loading state y error handling
+- Función helper: `getBenchmarkForSINCO(sinco: string)` que extraiga la división SINCO (primer dígito) y busque en `datos.por_ocupacion`
+
+### 3. Integración en el análisis de Claude
+**Modificar:** `netlify/functions/analyze-fit.ts`
+
+Agregar al system prompt de Claude un contexto como:
+```
+CONTEXTO SALARIAL MÉXICO (INEGI-ENOE 2024-T4):
+- Brecha nacional: {brecha_nacional}%
+- Salario promedio {ocupacion}: ${salario_hombre} (hombres) vs ${salario_mujer} (mujeres)
+- Fuente: INEGI ENOE {trimestre}
+
+Cuando analices el fit laboral, considera si el salario ofrecido está en línea 
+con el mercado y si existe brecha de género en esta ocupación específica.
+```
+
+### 4. UI Component: `src/components/SalaryBenchmark.tsx`
+**Mostrar en la página de resultados:**
+- Badge con la brecha salarial detectada (rojo si >10%, amarillo si 5-10%, verde si <5%)
+- Tooltip explicando "¿Qué es la brecha salarial?"
+- Comparativa visual: salario hombre vs mujer (barras horizontales)
+- Nota metodológica: "Datos INEGI ENOE {trimestre}, muestra representativa nacional"
+- Si no hay datos suficientes: mostrar "Datos no disponibles para esta ocupación"
+
+### 5. Script de actualización: `scripts/update-inegi-data.sh`
+**Bash script que:**
+1. Descargue el último ZIP de ENOE (detectar automáticamente el trimestre más reciente)
+2. Extraiga SDEMT*.csv y COE1T*.csv
+3. Ejecute `python process_enoe.py` con los archivos correctos
+4. Mueva `salary_benchmarks.json` a `netlify/functions/data/`
+5. Commit automático con mensaje "chore: actualizar benchmarks INEGI {trimestre}"
+
+## Archivos a crear/modificar:
+- [ ] `netlify/functions/inegi-benchmark.ts` (nuevo)
+- [ ] `netlify/functions/data/salary_benchmarks.json` (generado por process_enoe.py)
+- [ ] `src/hooks/useSalaryBenchmark.ts` (nuevo)
+- [ ] `src/components/SalaryBenchmark.tsx` (nuevo)
+- [ ] `netlify/functions/analyze-fit.ts` (modificar: agregar contexto INEGI al prompt)
+- [ ] `src/pages/AnalysisResults.tsx` (modificar: importar y usar SalaryBenchmark component)
+- [ ] `scripts/update-inegi-data.sh` (nuevo)
+- [ ] `README.md` (agregar sección sobre actualización de datos INEGI)
+
+## Instrucciones técnicas:
+1. **TypeScript estricto**: Define interfaces para todos los tipos de datos
+2. **Error handling**: Si `salary_benchmarks.json` no existe, usa datos mock con `isMock: true`
+3. **Performance**: Lazy load del componente SalaryBenchmark en results
+4. **i18n ready**: Prepara los textos para ser traducidos (usa claves como `benchmark.title`, `benchmark.genderGap`)
+5. **Tests**: Agrega al menos 1 test para el hook `useSalaryBenchmark`
+
+## Variables de entorno (si aplican):
+- `INEGI_DATA_PATH`: Ruta al JSON de benchmarks (default: `./netlify/functions/data/salary_benchmarks.json`)
+- `ENABLE_INEGI_CACHE`: Boolean para habilitar/deshabilitar cache (default: true)
+
+## Ejemplo de uso en el frontend:
+```typescript
+// En AnalysisResults.tsx
+const { data: benchmark, isLoading } = useSalaryBenchmark({
+  sinco: "2111", // Ingenieros en sistemas
+  entidad: "09"  // CDMX
+});
+
+// Render condicional
+{benchmark && <SalaryBenchmark data={benchmark} />}
+```
+
+## Notas importantes:
+- El script `process_enoe.py` YA EXISTE y funciona, NO lo modifiques
+- Los datos ENOE son trimestrales → muestra siempre la fecha del trimestre
+- Si la brecha es >15%, muestra un alert visual destacando la desigualdad
+- Prioriza UX: si los datos tardan en cargar, muestra skeleton loader
+- El endpoint debe funcionar en production (Netlify) y local (netlify dev)
+
+## Entregables:
+Genera el código completo de cada archivo, listo para copiar/pegar. 
+Usa rutas relativas desde la raíz del proyecto FairHire.
+Si modificas un archivo existente, muestra el diff completo.
+```
+
+---
+

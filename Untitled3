@@ -1,0 +1,102 @@
+MAYTE GIOVANNA HERNANDEZ RIOS
+Cloud & Automation Engineer | AI Infrastructure | Mathematics @ UNAM
+Mexico City, Mexico
+PROFESSIONAL SUMMARY
+Cloud & Automation Engineer with 1 year of hands-on AWS enterprise support experience in data transit and storage services (S3, DataSync, Transfer Family, Storage Gateway, FSx, EFS). Resolved 200+ complex technical cases for global clients while developing Python/boto3 automation scripts and supporting Terraform IaC. Currently co-founding Positronica Labs, an AI infrastructure startup with two production products. Strong mathematical background from UNAM Facultad de Ciencias applied to system design and ML infrastructure. Building toward MLOps/LLMOps.
+Open to Cloud Engineer, DevOps, and MLOps roles in Mexico or remote.
+
+TECHNICAL SKILLS
+AWS — S3, DataSync, Transfer Family (SFTP/FTPS/FTP/AS2), Storage Gateway, FSx (Lustre/ONTAP/Windows/OpenZFS), EFS, Lambda, EventBridge, SQS/SNS, IAM, CloudWatch, CloudFormation, EC2, API Gateway, SageMaker, Bedrock, Amazon Connect, Snow Family, AWS Backup
+IaC & DevOps — Terraform (workspaces, multi-env), CloudFormation, AWS CLI, Git/GitHub, Linux (Pop!_OS), Bash, Docker (basic), Netlify Serverless, CI/CD
+Programming — Python (boto3, FastAPI, Playwright, pandas), TypeScript, JavaScript, SQL, R, Bash
+AI/ML Infrastructure — RAG, LangChain, LangGraph, Anthropic Claude, OpenAI, Qwen/DashScope, prompt engineering, vector databases, embeddings, multi-agent systems, Ollama, ROCm (AMD GPU)
+Frontend — React, TypeScript, Tailwind CSS, Vite, shadcn/ui, Next.js (basic)
+Databases — SQL, SQLite, TiDB Cloud (HTAP), vector DBs
+Languages — Spanish (Native) | English (C1 – daily professional use) | Japanese (Intermediate)
+
+WORK EXPERIENCE
+Co-Founder & AI Developer
+Positronica Labs · Jan 2026 – Present · Mexico City (Remote)
+
+Co-founding AI infrastructure startup with sister Jeaneth Hernandez.
+Built FairHire (fairfit-ai.netlify.app) in 8 hours at SheBuilds x Lovable hackathon: AI tool analyzing gender pay gaps and job fit for women in Mexico. Implemented secure Netlify serverless proxy for Anthropic Claude API under high load.
+Led infrastructure, FastAPI backend, and DevOps for QMANUS/AgentNexus, a multi-tenant AI agent orchestration platform at Alibaba Cloud x TiDB hackathon.
+Manage cloud infrastructure, deployments, and automation pipelines for all products.
+Stack: React, TypeScript, Tailwind, Vite, shadcn/ui, Netlify, Anthropic, FastAPI, Python, TiDB Cloud, Alibaba Cloud, Qwen.
+
+Cloud Support Engineer
+Amazon Web Services (AWS) · Sep 2024 – Sep 2025 · Mexico City (Hybrid)
+Data Transit & Storage Team – 13 services
+
+Provided enterprise-level support for S3, DataSync, Transfer Family, Storage Gateway, FSx, EFS, Lambda, SageMaker, Bedrock, and Amazon Connect. Resolved 200+ complex cases with 95%+ CSAT.
+Designed data warehouse architecture integrating Amazon Connect, S3, RDS, and Glue for automated call recording storage and QA.
+Developed Python/boto3 automation scripts that reduced manual diagnostics by ~25%.
+Supported clients with Terraform IaC configurations and troubleshooting.
+Authored internal knowledge base articles adopted by 50+ team members; submitted 3 accepted bug reports to AWS engineering.
+Collaborated in English in agile environment across global time zones.
+
+Bilingual Collections Agent
+Concord Servicing · Mar–Jun 2024 · Mexico City
+
+Managed outbound collections calls in English and Spanish, verified identities, and processed payments.
+
+Customer Service Representative
+ATENTO México · Oct–Dec 2023 · On-site
+Bilingual Sales & Customer Service Agent
+Telvista · Jul 2022 – Aug 2023 · Mexico City (On-site)
+
+Handled airline reservations via Sabre and managed inquiries/cross-selling in English/Spanish.
+
+
+SELECTED PROJECTS
+FairHire — AI Job Fit & Gender Pay Gap Analyzer
+Positronica Labs · Mar 2026 · fairfit-ai.netlify.app
+
+Built in 8 hours at hackathon. Analyzes CVs/job descriptions for fit scores, skill gaps, Mexico-specific pay gap context, and negotiation strategies.
+Stack: React, TS, Tailwind, shadcn/ui, Netlify Serverless, Anthropic Claude.
+
+QMANUS / AgentNexus — Multi-Tenant AI Agent Platform
+Alibaba Cloud x TiDB Hackathon · Mar 2026
+
+Led infrastructure, backend, and DevOps for multi-tenant AI orchestration platform.
+Stack: FastAPI, Python, TiDB Cloud, Qwen API, Alibaba Cloud ECS.
+
+Credix — Financial Inclusion Platform (Upcoming)
+Capital One Hackathon @ Talent Land 2026 · Apr 2026
+
+Infrastructure lead designing serverless AWS architecture for QR payments → microcredit system.
+Stack: AWS Serverless, Terraform, Java/Spring Boot, Python.
+
+RAG-Based Prompt Optimizer
+Kavak × OpenAI Hackathon · Oct 2025
+Stack: Python, LangChain, OpenAI, FastAPI, Next.js.
+AI Job Search Automation Tool (In development)
+Positronica Labs · Oct 2025 – Present
+Stack: Python, Playwright, SQLite, Telegram Bot API.
+Cloud Automation Scripts (AWS Support)
+
+Python/boto3 and Bash scripts for DataSync validation, S3 monitoring, Transfer Family diagnostics, and Terraform support.
+
+
+EDUCATION
+Bachelor of Science in Mathematics (In Progress)
+Universidad Nacional Autónoma de México (UNAM) – Facultad de Ciencias
+Aug 2022 – Jul 2026 (expected)
+Relevant coursework: Mathematical Analysis, Linear Algebra, Probability & Statistics, Discrete Mathematics, Algorithms, Statistical Models in R.
+Mechanical Engineering (4 semesters)
+Instituto Politécnico Nacional (IPN) · 2015–2017
+
+CERTIFICATIONS
+
+AWS Solutions Architect Associate (SAA-C03) — Exam scheduled April 6, 2026 (prior score: 687/720)
+Introduction to Statistical Analysis in RStudio — UAM · Sep 2025
+Git & GitHub / Programming Fundamentals — Alura Latam · 2023
+
+
+COMMUNITY & ADDITIONAL
+
+Co-founder, Positronica Labs — first product live March 2026
+Invited speaker, AI Collective CDMX (Mar 2026)
+Accepted into Residencia IA Product Latam (Phase 1)
+Active member of AI CDMX and Python CDMX meetups
+Open to remote, hybrid, and Mexico City-based opportunities

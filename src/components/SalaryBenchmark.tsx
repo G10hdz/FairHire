@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { AlertTriangle, Info } from "lucide-react";
+import { AlertTriangle, Info, DollarSign, User, Users } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import type { BenchmarkResponse } from "@/hooks/useSalaryBenchmark";
 import { cn } from "@/lib/utils";
@@ -99,7 +99,7 @@ export const SalaryBenchmark = ({ data, className }: SalaryBenchmarkProps) => {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
-            <span className="text-xl">💰</span>
+            <DollarSign className="w-6 h-6 text-primary" />
             {t("benchmark.title", "Datos Salariales")}
           </CardTitle>
           
@@ -162,18 +162,20 @@ export const SalaryBenchmark = ({ data, className }: SalaryBenchmarkProps) => {
         <div className="space-y-3">
           <div className="space-y-1">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">
-                👨 {t("benchmark.men", "Hombres")}
+              <span className="text-muted-foreground flex items-center gap-2">
+                <User className="w-4 h-4" />
+                {t("benchmark.men", "Hombres")}
               </span>
               <span className="font-medium">{formatCurrency(salario_promedio_hombre)}</span>
             </div>
             <Progress value={hombrePercent} className="h-2" />
           </div>
-          
+
           <div className="space-y-1">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">
-                👩 {t("benchmark.women", "Mujeres")}
+              <span className="text-muted-foreground flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                {t("benchmark.women", "Mujeres")}
               </span>
               <span className="font-medium">{formatCurrency(salario_promedio_mujer)}</span>
             </div>
