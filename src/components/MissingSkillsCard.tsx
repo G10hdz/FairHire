@@ -1,5 +1,3 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "@/hooks/useTranslation";
 
 interface MissingSkillsCardProps {
@@ -9,26 +7,31 @@ interface MissingSkillsCardProps {
 export const MissingSkillsCard = ({ skills }: MissingSkillsCardProps) => {
   const { t } = useTranslation();
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-secondary-foreground">{t("analysis.missingSkills.title")}</CardTitle>
-        <CardDescription>
+    <div className="glass-card p-8 space-y-6">
+      <div className="space-y-2">
+        <h3 className="font-headline text-xl font-semibold text-foreground">
+          {t("analysis.missingSkills.title")}
+        </h3>
+        <p className="text-sm text-muted-foreground font-body">
           {t("analysis.missingSkills.description")}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-2">
-          {skills.map((skill, index) => (
-            <Badge 
-              key={index} 
-              variant="outline" 
-              className="border-secondary text-secondary-foreground hover:bg-secondary/10"
-            >
-              {skill}
-            </Badge>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-3">
+        {skills.map((skill, index) => (
+          <span
+            key={index}
+            className="skill-badge px-4 py-2 text-sm font-body"
+          >
+            {skill}
+          </span>
+        ))}
+        {skills.length === 0 && (
+          <p className="text-sm text-muted-foreground italic font-body">
+            {t("analysis.missingSkills.noMissing")}
+          </p>
+        )}
+      </div>
+    </div>
   );
 };

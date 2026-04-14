@@ -13,6 +13,13 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        body: ["Inter", "system-ui", "sans-serif"],
+        headline: ["Space Grotesk", "system-ui", "sans-serif"],
+        label: ["Inter", "system-ui", "sans-serif"],
+        orbitron: ["Orbitron", "system-ui", "sans-serif"],
+        space: ["Space Grotesk", "system-ui", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -47,11 +54,19 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // FairHire brand colors
-        "deep-purple": "hsl(var(--deep-purple))",
-        "electric-violet": "hsl(var(--electric-violet))",
-        "rose-gold": "hsl(var(--rose-gold))",
-        "off-white": "hsl(var(--off-white))",
+        // Positronica Labs brand colors
+        lavender: {
+          DEFAULT: "#C4B5E3",
+          dim: "#554971",
+          fixed: "#d7c7f6",
+        },
+        "surface-tint": "#61557d",
+        pink: {
+          biological: "#E8A0BF",
+          soft: "#ffcfec",
+        },
+        "green-synthetic": "#98FF98",
+        "gold-quantum": "#FFD700",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -85,10 +100,25 @@ export default {
             height: "0",
           },
         },
+        gradientMove: {
+          "0%": { backgroundPosition: "0% 50%" },
+          "100%": { backgroundPosition: "200% 50%" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-6px)" },
+        },
+        pulseGlow: {
+          "0%, 100%": { boxShadow: "0 0 8px rgba(196, 181, 227, 0.3)" },
+          "50%": { boxShadow: "0 0 20px rgba(196, 181, 227, 0.5)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "gradient-move": "gradientMove 3s linear infinite",
+        float: "float 3s ease-in-out infinite",
+        "pulse-glow": "pulseGlow 2s ease-in-out infinite",
       },
     },
   },

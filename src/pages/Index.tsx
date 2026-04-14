@@ -1,7 +1,6 @@
 import { useState, lazy, Suspense, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Toaster } from "@/components/ui/toaster";
@@ -15,9 +14,9 @@ import { CoverLetterCard } from "@/components/CoverLetterCard";
 import { LanguageToggle } from "@/components/LanguageToggle/LanguageToggle";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { HowItWorks } from "@/components/HowItWorks";
-import { AlertTriangle, ClipboardList, FileText, Sparkles } from "lucide-react";
+import { AlertTriangle, ClipboardList, FileText, Sparkles, ArrowLeft } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useSalaryBenchmark, getSINCODivision } from "@/hooks/useSalaryBenchmark";
+import { useSalaryBenchmark } from "@/hooks/useSalaryBenchmark";
 
 // Lazy load SalaryBenchmark for better performance
 const SalaryBenchmark = lazy(() => import("@/components/SalaryBenchmark").then(module => ({
@@ -39,7 +38,6 @@ const Index = () => {
   useEffect(() => {
     const hasSeenOnboarding = localStorage.getItem("fairhire-onboarding-seen");
     if (!hasSeenOnboarding) {
-      // Small delay to ensure page is loaded
       setTimeout(() => setShowOnboarding(true), 500);
     }
   }, []);
@@ -47,10 +45,10 @@ const Index = () => {
   // Get current language for API calls
   const currentLanguage = i18n.language.split('-')[0]; // 'es' or 'en'
 
-  // Fetch INEGI benchmark data (national level by default)
+  // Fetch INEGI benchmark data
   const { data: benchmark, isLoading: isBenchmarkLoading } = useSalaryBenchmark({
-    sinco: "2111", // Default to software engineers (division 2 = Profesionistas y técnicos)
-    entidad: "09"  // CDMX
+    sinco: "2111",
+    entidad: "09"
   });
 
   const handleAnalyze = async () => {
@@ -97,8 +95,8 @@ const Index = () => {
       });
     } catch (error) {
       console.error("Analysis error:", error);
-      const errorMessage = error instanceof Error 
-        ? error.message.includes("API") 
+      const errorMessage = error instanceof Error
+        ? error.message.includes("API")
           ? "No pudimos conectar con el servicio de análisis. Verifica tu conexión e intenta de nuevo."
           : error.message
         : "Ocurrió un error inesperado. Inténtalo de nuevo en unos momentos.";
@@ -113,210 +111,192 @@ const Index = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-primary">{t("app.name")}</h1>
-              <p className="text-sm text-muted-foreground">{t("app.tagline")}</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Badge variant="secondary" className="hidden md:block">
-                {t("app.tagline")}
-              </Badge>
-              <LanguageToggle />
-            </div>
-          </div>
-        </div>
-      </header>
+  const handleNewAnalysis = () => {
+    setShowResults(false);
+    setResults(null);
+    setError(null);
+  };
 
-      <div className="container mx-auto px-4 py-8">
+  return (
+    <div className="min-h-screen bg-background bg-dot-grid relative">
+      {/* Glass Nav Bar */}
+      <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-lavender/15">
+        <div className="container mx-auto px-8 py-4 flex items-center justify-between">
+          <h1 className="font-orbitron text-xl font-bold tracking-[0.15em] uppercase text-lavender">
+            {t("app.name")}
+          </h1>
+          <LanguageToggle />
+        </div>
+      </nav>
+
+      <div className="container mx-auto px-8 py-16">
         {!showResults ? (
-          /* Input Form */
-          <div className="max-w-4xl mx-auto space-y-8">
-            <div className="text-center space-y-4">
-              <h2 className="text-4xl md:text-6xl font-bold text-foreground">
+          /* === INPUT FORM === */
+          <div className="max-w-6xl mx-auto space-y-16">
+            {/* Hero */}
+            <div className="text-center space-y-6">
+              <h2 className="font-headline text-5xl md:text-6xl font-bold text-foreground tracking-tight">
                 {t("home.title")}
               </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-body">
                 {t("home.description")}
               </p>
             </div>
 
-            {/* How it works - Expandable section */}
-            <div className="max-w-2xl mx-auto">
+            {/* How it works */}
+            <div className="max-w-3xl mx-auto">
               <HowItWorks />
             </div>
 
+            {/* Error Alert */}
             {error && (
-              <Alert variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
+              <Alert className="max-w-2xl mx-auto pink-alert">
+                <AlertTriangle className="h-4 w-4 text-pink-biological" />
+                <AlertDescription className="text-foreground">{error}</AlertDescription>
               </Alert>
             )}
 
+            {/* Input Cards */}
             <div className="grid md:grid-cols-2 gap-8">
-              <Card className="border-2 border-primary/20 hover:border-primary/40 transition-colors">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-primary">
-                    <ClipboardList className="w-6 h-6" />
-                    {t("home.form.jobDescription.title")}
-                  </CardTitle>
-                  <CardDescription>
-                    {t("home.form.jobDescription.description")}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Textarea
-                    placeholder={t("placeholders.jobDescription")}
-                    className="min-h-[200px] resize-none border-muted focus:border-primary"
-                    value={jobDescription}
-                    onChange={(e) => setJobDescription(e.target.value)}
-                  />
-                </CardContent>
-              </Card>
+              {/* Job Description Card */}
+              <div className="glass-card p-8 min-h-[350px] flex flex-col">
+                <label className="font-orbitron text-xs uppercase tracking-[0.2em] text-surface-tint mb-6">
+                  <ClipboardList className="w-4 h-4 inline mr-2" />
+                  {t("home.form.jobDescription.title")}
+                </label>
+                <Textarea
+                  placeholder={t("placeholders.jobDescription")}
+                  className="flex-1 min-h-[200px] resize-none ghost-input font-body text-foreground placeholder:text-muted-foreground/60"
+                  value={jobDescription}
+                  onChange={(e) => setJobDescription(e.target.value)}
+                />
+              </div>
 
-              <Card className="border-2 border-secondary/40 hover:border-secondary/60 transition-colors">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-secondary-foreground">
-                    <FileText className="w-6 h-6" />
-                    {t("home.form.cv.title")}
-                  </CardTitle>
-                  <CardDescription>
-                    {t("home.form.cv.description")}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Textarea
-                    placeholder={t("placeholders.cv")}
-                    className="min-h-[200px] resize-none border-muted focus:border-secondary"
-                    value={cvText}
-                    onChange={(e) => setCvText(e.target.value)}
-                  />
-                </CardContent>
-              </Card>
+              {/* CV Card */}
+              <div className="glass-card p-8 min-h-[350px] flex flex-col">
+                <label className="font-orbitron text-xs uppercase tracking-[0.2em] text-surface-tint mb-6">
+                  <FileText className="w-4 h-4 inline mr-2" />
+                  {t("home.form.cv.title")}
+                </label>
+                <Textarea
+                  placeholder={t("placeholders.cv")}
+                  className="flex-1 min-h-[200px] resize-none ghost-input font-body text-foreground placeholder:text-muted-foreground/60"
+                  value={cvText}
+                  onChange={(e) => setCvText(e.target.value)}
+                />
+              </div>
             </div>
 
-            <div className="text-center">
+            {/* Analyze Button */}
+            <div className="text-center space-y-4">
               <Button
                 onClick={handleAnalyze}
                 disabled={!jobDescription.trim() || !cvText.trim() || isAnalyzing}
-                className="px-12 py-3 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground transition-all hover:scale-105 active:scale-95"
+                className="px-12 py-6 text-lg font-semibold text-foreground bg-gradient-primary rounded-sm transition-all hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(196,181,227,0.4)] active:translate-y-0 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none"
               >
                 {isAnalyzing ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full"></div>
                     {t("actions.analyzing")}
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <Sparkles className="w-5 h-5" />
                     {t("actions.analyze")}
                   </div>
                 )}
               </Button>
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="text-sm text-muted-foreground font-orbitron tracking-wider">
                 {t("labels.aiPowered")}
               </p>
             </div>
           </div>
         ) : (
-          /* Results */
-          <div className="max-w-6xl mx-auto space-y-12">
-            {/* Header with empowerment message */}
-            <div className="text-center space-y-4">
-              <h2 className="text-3xl font-bold text-primary">{t("labels.analysisCompleted")}</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                {t("analysis.summary.encouragement")}
-              </p>
+          /* === RESULTS DASHBOARD === */
+          <div className="max-w-7xl mx-auto space-y-12">
+            {/* Header */}
+            <div className="space-y-6">
               <Button
                 variant="outline"
-                onClick={() => {
-                  setShowResults(false);
-                  setResults(null);
-                  setError(null);
-                }}
-                className="text-sm"
+                onClick={handleNewAnalysis}
+                className="ghost-border text-lavender hover:text-lavender-dim hover:bg-lavender/5 rounded-sm transition-all"
               >
-                ← {t("actions.newAnalysis")}
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                {t("actions.newAnalysis")}
               </Button>
+
+              <div className="space-y-3">
+                <h2 className="font-headline text-4xl font-bold text-foreground">
+                  {t("labels.analysisCompleted")}
+                </h2>
+                <div className="gradient-divider w-full max-w-md" />
+              </div>
+
+              <p className="text-lg text-muted-foreground max-w-2xl font-body">
+                {t("analysis.summary.encouragement")}
+              </p>
             </div>
 
             {results && (
               <>
-                {/* Section 1: Insights (Context & Data) */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="h-px flex-1 bg-border" />
-                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                {/* Section 1: Insights */}
+                <section className="space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="h-px flex-1 bg-lavender/15" />
+                    <h3 className="font-orbitron text-xs uppercase tracking-[0.2em] text-lavender-dim whitespace-nowrap">
                       {t("analysis.sections.insights")}
                     </h3>
-                    <div className="h-px flex-1 bg-border" />
+                    <div className="h-px flex-1 bg-lavender/15" />
                   </div>
 
-                  {/* Pay Gap Context - Lead with systemic validation */}
-                  <div className="grid gap-6">
+                  <div className="space-y-8">
+                    {/* Pay Gap Context */}
                     <PayGapCard context={results.payGapContext} />
-                    
-                    {/* INEGI Salary Benchmark Data */}
+
+                    {/* INEGI Salary Benchmark */}
                     {isBenchmarkLoading ? (
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <div className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                            {t("benchmark.title")}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-3">
-                            <div className="h-4 bg-muted rounded animate-pulse" />
-                            <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
-                          </div>
-                        </CardContent>
-                      </Card>
+                      <div className="glass-card p-8">
+                        <div className="space-y-4">
+                          <div className="h-4 bg-muted rounded animate-pulse w-48" />
+                          <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
+                          <div className="h-4 bg-muted rounded animate-pulse w-1/2" />
+                        </div>
+                      </div>
                     ) : benchmark ? (
                       <Suspense fallback={
-                        <Card>
-                          <CardHeader>
-                            <CardTitle>{t("benchmark.title")}</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="h-20 bg-muted rounded animate-pulse" />
-                          </CardContent>
-                        </Card>
+                        <div className="glass-card p-8">
+                          <div className="h-20 bg-muted rounded animate-pulse" />
+                        </div>
                       }>
                         <SalaryBenchmark data={benchmark} />
                       </Suspense>
                     ) : null}
-                  </div>
 
-                  {/* Fit Score - Reframed as growth metric */}
-                  <div className="grid lg:grid-cols-2 gap-6">
-                    <FitScoreCard score={results.fitScore} summary={results.fitSummary} />
-                    <MissingSkillsCard skills={results.missingSkills} />
+                    {/* Fit Score + Missing Skills */}
+                    <div className="grid lg:grid-cols-2 gap-8">
+                      <FitScoreCard score={results.fitScore} summary={results.fitSummary} />
+                      <MissingSkillsCard skills={results.missingSkills} />
+                    </div>
                   </div>
                 </section>
 
-                {/* Section 2: Actions (Tools for Next Steps) */}
-                <section className="space-y-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="h-px flex-1 bg-border" />
-                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                {/* Section 2: Actions */}
+                <section className="space-y-8">
+                  <div className="flex items-center gap-4">
+                    <div className="h-px flex-1 bg-lavender/15" />
+                    <h3 className="font-orbitron text-xs uppercase tracking-[0.2em] text-lavender-dim whitespace-nowrap">
                       {t("analysis.sections.actions")}
                     </h3>
-                    <div className="h-px flex-1 bg-border" />
+                    <div className="h-px flex-1 bg-lavender/15" />
                   </div>
 
-                  <div className="grid lg:grid-cols-3 gap-6">
-                    {/* Salary Tips - Actionable negotiation guidance */}
+                  <div className="grid lg:grid-cols-3 gap-8">
+                    {/* Salary Tips - 2/3 width */}
                     <div className="lg:col-span-2">
                       <SalaryTipsCard tips={results.salaryNegotiationTips} />
                     </div>
-                    
-                    {/* Cover Letter - Ready-to-use artifact */}
+
+                    {/* Cover Letter - 1/3 width */}
                     <div className="lg:col-span-1">
                       <CoverLetterCard coverLetter={results.coverLetter} />
                     </div>
@@ -329,26 +309,26 @@ const Index = () => {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-muted/30 py-8 mt-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center space-y-3">
-            <p className="text-sm text-muted-foreground">
+      <footer className="border-t border-lavender/15 py-12 mt-24">
+        <div className="container mx-auto px-8">
+          <div className="text-center space-y-4">
+            <p className="font-orbitron text-xs uppercase tracking-[0.15em] text-muted-foreground">
               {t("app.footer")}
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground font-body">
               {t("app.copyright")}
             </p>
             <a
-              href="https://www.linkedin.com/in/mayte-giovanna-hernandez-rios"
+              href="https://positronicalabs.netlify.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors hover:opacity-80"
-              style={{ color: '#0077B5' }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-sm text-xs font-medium ghost-border text-lavender-dim hover:bg-lavender/5 hover:border-lavender/40 transition-all"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#0077B5" className="w-4 h-4">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/>
+                <path d="M9 18c-4.51 2-5-2-7-2"/>
               </svg>
-              Built by Gio · Connect on LinkedIn
+              Positronica Labs
             </a>
           </div>
         </div>
@@ -359,7 +339,6 @@ const Index = () => {
         open={showOnboarding}
         onOpenChange={setShowOnboarding}
         onGetStarted={() => {
-          // Scroll to first input field
           const firstTextarea = document.querySelector('textarea');
           firstTextarea?.focus();
         }}

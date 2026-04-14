@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev          # Vite dev server on port 8080
+npm run dev          # Vite dev server on port 8081
 npm run build        # Production build → dist/
 npm run lint         # ESLint
 npm run test         # Run all tests once (Vitest)
@@ -15,7 +15,7 @@ npm run test -- src/test/specific.test.ts  # Single test file
 
 For local development with Netlify functions:
 ```bash
-netlify dev          # Uses netlify.toml: targetPort=8081, wraps Vite on 8080
+netlify dev          # Uses netlify.toml: targetPort=8081
 ```
 
 ## Architecture
@@ -25,6 +25,7 @@ netlify dev          # Uses netlify.toml: targetPort=8081, wraps Vite on 8080
 ### Tech Stack
 - React 18 + TypeScript + Vite (SPA, `dist/`)
 - Tailwind CSS + shadcn/ui + Radix UI
+- Positronica Labs design system: Lavender `#C4B5E3`, glassmorphism, Orbitron + Space Grotesk + Inter fonts
 - TanStack Query v5 for INEGI data caching
 - i18next (Spanish `es` / English `en`)
 - Vitest + React Testing Library

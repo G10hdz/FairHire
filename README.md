@@ -2,20 +2,22 @@
 
 ![Deployed on Netlify](https://img.shields.io/badge/Deployed-Netlify-00C7B7?style=for-the-badge&logo=netlify)
 ![Mirror on Vercel](https://img.shields.io/badge/Mirror-Vercel-000000?style=for-the-badge&logo=vercel)
-![Bootstrapped with Lovable](https://img.shields.io/badge/Bootstrapped_with-Lovable-FF4F00?style=for-the-badge)
 ![Built with React](https://img.shields.io/badge/React-TypeScript-61DAFB?style=for-the-badge&logo=react)
 ![Powered by Claude](https://img.shields.io/badge/AI-Claude_Sonnet_4-D97757?style=for-the-badge&logo=anthropic)
+![Positronica Design System](https://img.shields.io/badge/Design-Positronica_C4B5E3?style=for-the-badge)
 
 🌎 **[ 🇺🇸 Read in English ](#english-version) | [ 🇲🇽 Leer en Español ](#versión-en-español)**
+
+🔗 **[Positronica Labs](https://positronicalabs.netlify.app/)** — AI for a fairer future.
 
 ---
 
 <a id="versión-en-español"></a>
 ## 🇲🇽 Versión en Español
 
-**FairHire** es un analizador de *fit* laboral y brecha salarial de género impulsado por Inteligencia Artificial, diseñado específicamente para empoderar a las mujeres en México durante su búsqueda de empleo. 
+**FairHire** es un analizador de *fit* laboral y brecha salarial de género impulsado por Inteligencia Artificial, diseñado específicamente para empoderar a las mujeres en México durante su búsqueda de empleo.
 
-Construido como el primer producto en producción para **Positronica Labs** durante el hackathon **SheBuilds on Lovable x 8M**.
+Primer producto en producción de **Positronica Labs**. Rediseñado con el sistema de diseño **"The Clinical Sublime"** de Positronica Labs — estética luminosa, clínica y sin peso visual.
 
 🔗 **[Demo en Vivo](https://fairfit-ai.netlify.app)**
 
@@ -37,7 +39,7 @@ Las usuarias simplemente pegan la descripción de una vacante y el texto de su C
 * **Despliegue primario:** Netlify (auto-deploy desde `main`) → https://fairfit-ai.netlify.app
 * **Despliegue espejo:** Vercel (rama `main`) → https://fairhire-sigma.vercel.app
 * **CI/CD:** GitHub Actions — code review automático y asistente de PR en cada pull request.
-* **Diseño:** Deep Purple (`#1a0533`), Electric Violet (`#7c3aed`), Rose Gold (`#e8b4b8`). Light + dark mode.
+* **Diseño:** Positronica Labs "The Clinical Sublime" — Lavender `#C4B5E3`, Pink `#E8A0BF`, Green `#98FF98`. Glassmorphism, dot grid background, Orbitron + Space Grotesk + Inter fonts. "No-line" borders, luminous depth via tonal stacking.
 
 #### ⚡ El Reto Técnico: Superando el colapso de servidores
 Durante el evento global de SheBuilds, los servidores de la plataforma principal colapsaron debido a la masiva demanda simultánea. Además, las políticas estrictas de CORS bloqueaban las llamadas directas desde el navegador a la API de Anthropic.
@@ -121,7 +123,7 @@ Response:
 - [x] **Datos INEGI-ENOE:** Benchmarks salariales con perspectiva de género por ocupación y entidad.
 - [x] **Onboarding:** Modal guiado para nuevas usuarias.
 - [x] **Deploy dual:** Netlify (primario) + Vercel (espejo).
-- [ ] **Mejoras UI:** Animaciones más fluidas para el *Fit Score* circular.
+- [x] **Rediseño Positronica:** Glassmorphism, dot grid, Orbitron + Space Grotesk, "no-line" borders.
 - [ ] **Bring Your Own Key (BYOK):** Permitir a las usuarias ingresar su propia API Key de Anthropic.
 
 ---
@@ -131,9 +133,9 @@ Response:
 
 **FairHire** is an AI-powered job fit and gender pay gap analyzer designed specifically to empower women in Mexico during their job search. 
 
-Built as the first production product for **Positronica Labs** during the **SheBuilds on Lovable x 8M** hackathon.
+Built as the first production product for **Positronica Labs**. Redesigned with the **"The Clinical Sublime"** design system from Positronica Labs — a luminous, clinical, weightless aesthetic.
 
-🔗 **[Live Demo](https://fairfit-ai.netlify.app)**
+🔗 **[Positronica Labs](https://positronicalabs.netlify.app/)**
 
 ### 🎯 What does it do?
 Users simply paste a job description and the text of their CV to receive an instant, actionable analysis:
@@ -153,7 +155,7 @@ Users simply paste a job description and the text of their CV to receive an inst
 * **Primary Deployment:** Netlify (auto-deploy from `main`) → https://fairfit-ai.netlify.app
 * **Mirror Deployment:** Vercel (`main` branch) → https://fairhire-sigma.vercel.app
 * **CI/CD:** GitHub Actions — automated code review and PR assistant on every pull request.
-* **Design:** Deep Purple (`#1a0533`), Electric Violet (`#7c3aed`), Rose Gold (`#e8b4b8`). Light + dark mode.
+* **Design:** Positronica Labs "The Clinical Sublime" — Lavender `#C4B5E3`, Pink `#E8A0BF`, Green `#98FF98`. Glassmorphism cards, dot grid background, Orbitron + Space Grotesk + Inter fonts. No-line borders, luminous depth via tonal stacking.
 
 #### ⚡ The Technical Challenge: Overcoming server collapse
 During the global SheBuilds event, the main platform's servers collapsed due to massive simultaneous demand. Additionally, strict CORS policies blocked direct browser calls to the Anthropic API.
@@ -237,7 +239,7 @@ Response:
 - [x] **INEGI-ENOE Data:** Gender-aware salary benchmarks by occupation and state.
 - [x] **Onboarding:** Guided modal for first-time users.
 - [x] **Dual Deploy:** Netlify (primary) + Vercel (mirror).
-- [ ] **UI Improvements:** Smoother animations for the circular Fit Score.
+- [x] **Positronica Redesign:** Glassmorphism, dot grid, Orbitron + Space Grotesk, "no-line" borders.
 - [ ] **Bring Your Own Key (BYOK):** Allow users to enter their own Anthropic API Key.
 
 ---

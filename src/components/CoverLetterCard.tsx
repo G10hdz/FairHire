@@ -1,6 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Copy, CheckCircle, FileText } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -34,40 +32,36 @@ export const CoverLetterCard = ({ coverLetter }: CoverLetterCardProps) => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-accent-foreground flex items-center gap-2">
-          <FileText className="w-5 h-5" />
-          {t("analysis.coverLetter.title")}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="relative">
-          <Textarea
-            readOnly
-            value={coverLetter}
-            className="min-h-[200px] text-sm leading-relaxed pr-20"
-          />
-          <Button
-            size="sm"
-            onClick={handleCopy}
-            className="absolute top-2 right-2 transition-all"
-            variant={copied ? "secondary" : "default"}
-          >
-            {copied ? (
-              <>
-                <CheckCircle className="w-4 h-4 mr-1 text-green-600" />
-                <span className="text-green-600">{t("actions.copied")}</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4 mr-1" />
-                {t("actions.copy")}
-              </>
-            )}
-          </Button>
+    <div className="glass-card p-8 space-y-6">
+      <h3 className="font-headline text-xl font-semibold text-foreground flex items-center gap-3">
+        <div className="p-2 rounded-full bg-lavender/10">
+          <FileText className="w-5 h-5 text-lavender-dim" />
         </div>
-      </CardContent>
-    </Card>
+        {t("analysis.coverLetter.title")}
+      </h3>
+
+      <div className="relative">
+        <div className="min-h-[250px] text-sm leading-relaxed font-body text-muted-foreground bg-surface-container-low/50 rounded-lg p-4 border border-lavender/10 whitespace-pre-wrap">
+          {coverLetter}
+        </div>
+        <Button
+          size="sm"
+          onClick={handleCopy}
+          className="absolute top-3 right-3 rounded-sm transition-all bg-gradient-primary text-foreground hover:opacity-90 hover:-translate-y-0.5"
+        >
+          {copied ? (
+            <>
+              <CheckCircle className="w-4 h-4 mr-1" />
+              {t("actions.copied")}
+            </>
+          ) : (
+            <>
+              <Copy className="w-4 h-4 mr-1" />
+              {t("actions.copy")}
+            </>
+          )}
+        </Button>
+      </div>
+    </div>
   );
 };

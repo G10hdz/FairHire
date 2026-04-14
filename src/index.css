@@ -2,95 +2,126 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Positronica Labs Design System - "The Clinical Sublime" */
 
 @layer base {
   :root {
-    /* FairHire Brand Colors - Light Mode Base */
-    --background: 252 100% 98%; /* off-white #faf5ff */
-    --foreground: 260 85% 15%; /* deep purple #1a0533 */
+    /* Positronica surface hierarchy (light mode) */
+    --background: 0 0% 96.5%; /* #F6F6F6 */
+    --foreground: 180 2% 18%; /* #2D2F2F */
 
-    --card: 252 100% 98%;
-    --card-foreground: 260 85% 15%;
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 180 2% 18%;
 
-    --popover: 252 100% 98%;
-    --popover-foreground: 260 85% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 180 2% 18%;
 
-    --primary: 260 75% 58%; /* electric violet #7c3aed */
-    --primary-foreground: 252 100% 98%;
+    /* Primary lavender */
+    --primary: 256 47% 80%; /* #C4B5E3 */
+    --primary-foreground: 180 2% 18%;
 
-    --secondary: 345 35% 80%; /* rose gold #e8b4b8 */
-    --secondary-foreground: 260 85% 15%;
+    /* Secondary muted rose */
+    --secondary: 320 17% 38%; /* #755068 */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 252 40% 94%;
-    --muted-foreground: 260 20% 55%;
+    /* Tertiary muted green */
+    --tertiary: 140 43% 30%; /* #3A644C */
+    --tertiary-foreground: 0 0% 100%;
 
-    --accent: 345 35% 80%; /* rose gold */
-    --accent-foreground: 260 85% 15%;
+    --muted: 180 2% 94.5%; /* #F0F1F1 */
+    --muted-foreground: 180 2% 36%; /* #5A5C5C */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 252 100% 98%;
+    --accent: 256 47% 80%;
+    --accent-foreground: 180 2% 18%;
 
-    --border: 260 20% 85%;
-    --input: 260 15% 92%;
-    --ring: 260 75% 58%;
+    --destructive: 345 83% 39%; /* #B41340 */
+    --destructive-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
-    
-    /* FairHire Brand-specific tokens */
-    --deep-purple: 260 85% 15%; /* #1a0533 */
-    --electric-violet: 260 75% 58%; /* #7c3aed */
-    --rose-gold: 345 35% 80%; /* #e8b4b8 */
-    --off-white: 252 100% 98%; /* #faf5ff */
+    --border: 180 2% 68%; /* #ACADAD at low opacity */
+    --input: 180 2% 94.5%;
+    --ring: 256 47% 80%;
+
+    --radius: 0.125rem; /* 2px - minimal rounding per Positronica */
+
+    /* Positronica brand tokens */
+    --lavender: 256 47% 80%; /* #C4B5E3 */
+    --lavender-dim: 256 22% 36%; /* #554971 */
+    --lavender-fixed: 256 67% 87%; /* #d7c7f6 */
+    --surface-tint: 256 19% 41%; /* #61557d */
+    --pink-biological: 329 100% 76%; /* #E8A0BF */
+    --pink-soft: 329 100% 87%; /* #ffcfec */
+    --green-synthetic: 120 100% 80%; /* #98FF98 */
+    --gold-quantum: 47 100% 50%; /* #FFD700 */
+    --error: 345 83% 39%; /* #B41340 */
+    --error-container: 345 89% 63%; /* #F74B6D */
+    --surface-container-lowest: 0 0% 100%; /* #FFFFFF */
+    --surface-container-low: 180 2% 94.1%; /* #F0F1F1 */
+    --surface-container: 180 2% 90.6%; /* #E7E8E8 */
+    --surface-container-high: 180 2% 88.2%; /* #E1E3E3 */
+    --surface-container-highest: 180 2% 86.3%; /* #DBDDDD */
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(to right, hsl(256 47% 80%), hsl(256 67% 87%));
+    --gradient-cta: linear-gradient(to right, hsl(256 47% 80%), hsl(329 100% 87%));
+    --gradient-divider: linear-gradient(90deg, hsl(256 47% 80%), hsl(329 100% 87%), hsl(256 47% 80%));
   }
 
   .dark {
-    /* FairHire Dark Mode - Feminist tech aesthetic */
-    --background: 260 85% 15%; /* deep purple #1a0533 */
-    --foreground: 252 100% 98%; /* off-white */
+    --background: 256 22% 12%;
+    --foreground: 0 0% 96.5%;
 
-    --card: 260 75% 20%; 
-    --card-foreground: 252 100% 98%;
+    --card: 256 22% 15%;
+    --card-foreground: 0 0% 96.5%;
 
-    --popover: 260 85% 15%;
-    --popover-foreground: 252 100% 98%;
+    --popover: 256 22% 12%;
+    --popover-foreground: 0 0% 96.5%;
 
-    --primary: 260 75% 58%; /* electric violet */
-    --primary-foreground: 252 100% 98%;
+    --primary: 256 47% 80%;
+    --primary-foreground: 256 22% 12%;
 
-    --secondary: 345 35% 80%; /* rose gold */
-    --secondary-foreground: 260 85% 15%;
+    --secondary: 320 17% 38%;
+    --secondary-foreground: 0 0% 96.5%;
 
-    --muted: 260 60% 25%;
-    --muted-foreground: 252 60% 75%;
+    --tertiary: 140 43% 30%;
+    --tertiary-foreground: 0 0% 96.5%;
 
-    --accent: 345 35% 80%;
-    --accent-foreground: 260 85% 15%;
+    --muted: 256 22% 20%;
+    --muted-foreground: 180 2% 61%;
 
-    --destructive: 0 62.8% 50%;
-    --destructive-foreground: 252 100% 98%;
+    --accent: 256 47% 80%;
+    --accent-foreground: 256 22% 12%;
 
-    --border: 260 40% 30%;
-    --input: 260 40% 30%;
-    --ring: 260 75% 58%;
+    --destructive: 345 89% 63%;
+    --destructive-foreground: 256 22% 12%;
+
+    --border: 256 22% 30%;
+    --input: 256 22% 25%;
+    --ring: 256 47% 80%;
+
+    --lavender: 256 47% 80%;
+    --lavender-dim: 256 22% 36%;
+    --lavender-fixed: 256 67% 87%;
+    --surface-tint: 256 19% 41%;
+    --pink-biological: 329 100% 76%;
+    --pink-soft: 329 100% 87%;
+    --green-synthetic: 120 100% 80%;
+    --gold-quantum: 47 100% 50%;
+    --error: 345 89% 63%;
+    --error-container: 345 83% 39%;
+    --surface-container-lowest: 256 22% 18%;
+    --surface-container-low: 256 22% 15%;
+    --surface-container: 256 22% 13%;
+    --surface-container-high: 256 22% 11%;
+    --surface-container-highest: 256 22% 10%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -109,7 +140,123 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: "Inter", system-ui, sans-serif;
   }
+
+  h1, h2, h3 {
+    font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+  }
+}
+
+/* Dot grid background pattern */
+.bg-dot-grid {
+  background-image: radial-gradient(circle, hsl(var(--lavender) / 0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Glassmorphism card */
+.glass-card {
+  background: hsl(var(--surface-container-lowest) / 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid hsl(var(--lavender) / 0.15);
+  border-radius: 1.5rem; /* 24px for cards */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-card:hover {
+  border-color: hsl(var(--lavender) / 0.4);
+  box-shadow: 0 0 20px hsl(var(--lavender) / 0.15);
+}
+
+/* Ghost border (15% opacity for subtle sectioning) */
+.ghost-border {
+  border: 1px solid hsl(var(--lavender) / 0.15);
+}
+
+/* Primary gradient button */
+.bg-gradient-primary {
+  background: linear-gradient(to right, hsl(var(--lavender)), hsl(var(--lavender-fixed)));
+}
+
+/* CTA gradient button */
+.bg-gradient-cta {
+  background: linear-gradient(to right, hsl(var(--lavender)), hsl(var(--pink-soft)));
+}
+
+/* Animated gradient divider */
+.gradient-divider {
+  height: 1px;
+  background: linear-gradient(90deg, hsl(var(--lavender)), hsl(var(--pink-soft)), hsl(var(--lavender)));
+  background-size: 200% 100%;
+  animation: gradient-move 3s linear infinite;
+}
+
+/* Bottom-border input (ghost border logic) */
+.ghost-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid hsl(var(--lavender) / 0.15);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ghost-input:focus {
+  border-bottom-color: hsl(var(--lavender) / 0.6);
+  box-shadow: 0 1px 8px hsl(var(--lavender) / 0.1);
+  outline: none;
+}
+
+/* Ambient glow (no traditional shadows) */
+.glow-lavender {
+  box-shadow: 0 0 20px hsl(var(--lavender) / 0.25);
+}
+
+.glow-pink {
+  box-shadow: 0 0 20px hsl(var(--pink-biological) / 0.25);
+}
+
+/* Z-axis hover lift */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 24px hsl(var(--lavender) / 0.15);
+}
+
+/* Pink alert card styling */
+.pink-alert {
+  background: hsl(var(--pink-biological) / 0.08);
+  border: 1px solid hsl(var(--pink-biological) / 0.25);
+}
+
+/* Skill badge */
+.skill-badge {
+  border-radius: 0.125rem; /* 2px */
+  border: 1px solid hsl(var(--lavender) / 0.3);
+  color: hsl(var(--lavender-dim));
+  background: hsl(var(--lavender) / 0.05);
+}
+
+/* Orbitron font for labels/data */
+.font-orbitron {
+  font-family: "Orbitron", system-ui, sans-serif;
+}
+
+.font-space {
+  font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--lavender));
+  border-radius: 0;
 }
 
 /* Reduced motion support */
@@ -122,4 +269,19 @@ All colors MUST be HSL.
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+@keyframes gradient-move {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px hsl(var(--lavender) / 0.3); }
+  50% { box-shadow: 0 0 20px hsl(var(--lavender) / 0.5); }
 }

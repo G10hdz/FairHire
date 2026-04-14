@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ClipboardList, FileText, Sparkles, X } from "lucide-react";
@@ -10,63 +9,63 @@ export const HowItWorks = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Card className="border-dashed">
+    <div className="glass-card">
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
           <button
-            className="w-full px-6 py-4 flex items-center justify-between gap-4"
+            className="w-full px-8 py-5 flex items-center justify-between gap-4 hover:bg-lavender/5 transition-colors rounded-[1.5rem]"
             aria-expanded={isOpen}
           >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-primary" />
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-lavender/10 flex items-center justify-center">
+                <Sparkles className="w-5 h-5 text-lavender-dim" />
               </div>
               <div className="text-left">
-                <h3 className="font-semibold text-foreground">
+                <h3 className="font-headline font-semibold text-foreground">
                   {t("onboarding.howItWorks.title")}
                 </h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground font-body">
                   {t("onboarding.howItWorks.subtitle")}
                 </p>
               </div>
             </div>
             <ChevronDown
-              className={`w-5 h-5 text-muted-foreground transition-transform ${
+              className={`w-5 h-5 text-muted-foreground transition-transform duration-200 ${
                 isOpen ? "rotate-180" : ""
               }`}
             />
           </button>
         </CollapsibleTrigger>
 
-        <CollapsibleContent className="data-[state=open]:animate-collapsible-down data-[state=closed]:animate-collapsible-up">
-          <CardContent className="pt-0 pb-6">
-            <div className="grid md:grid-cols-3 gap-4 mt-4">
-              <div className="flex flex-col items-center text-center p-4 rounded-lg bg-muted/30">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
-                  <ClipboardList className="w-6 h-6 text-primary" />
+        <CollapsibleContent>
+          <div className="px-8 pb-8">
+            <div className="grid md:grid-cols-3 gap-6 mt-2">
+              <div className="flex flex-col items-center text-center p-6 bg-surface-container-low/50 rounded-lg border border-lavender/10">
+                <div className="w-14 h-14 rounded-full bg-gradient-primary flex items-center justify-center mb-4">
+                  <ClipboardList className="w-7 h-7 text-foreground" />
                 </div>
-                <h4 className="font-medium mb-1">{t("onboarding.howItWorks.step1.title")}</h4>
-                <p className="text-sm text-muted-foreground">
+                <h4 className="font-headline font-medium mb-2 text-foreground">{t("onboarding.howItWorks.step1.title")}</h4>
+                <p className="text-sm text-muted-foreground font-body">
                   {t("onboarding.howItWorks.step1.description")}
                 </p>
               </div>
 
-              <div className="flex flex-col items-center text-center p-4 rounded-lg bg-muted/30">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
-                  <FileText className="w-6 h-6 text-primary" />
+              <div className="flex flex-col items-center text-center p-6 bg-surface-container-low/50 rounded-lg border border-lavender/10">
+                <div className="w-14 h-14 rounded-full bg-gradient-primary flex items-center justify-center mb-4">
+                  <FileText className="w-7 h-7 text-foreground" />
                 </div>
-                <h4 className="font-medium mb-1">{t("onboarding.howItWorks.step2.title")}</h4>
-                <p className="text-sm text-muted-foreground">
+                <h4 className="font-headline font-medium mb-2 text-foreground">{t("onboarding.howItWorks.step2.title")}</h4>
+                <p className="text-sm text-muted-foreground font-body">
                   {t("onboarding.howItWorks.step2.description")}
                 </p>
               </div>
 
-              <div className="flex flex-col items-center text-center p-4 rounded-lg bg-muted/30">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
-                  <Sparkles className="w-6 h-6 text-primary" />
+              <div className="flex flex-col items-center text-center p-6 bg-surface-container-low/50 rounded-lg border border-lavender/10">
+                <div className="w-14 h-14 rounded-full bg-gradient-primary flex items-center justify-center mb-4">
+                  <Sparkles className="w-7 h-7 text-foreground" />
                 </div>
-                <h4 className="font-medium mb-1">{t("onboarding.howItWorks.step3.title")}</h4>
-                <p className="text-sm text-muted-foreground">
+                <h4 className="font-headline font-medium mb-2 text-foreground">{t("onboarding.howItWorks.step3.title")}</h4>
+                <p className="text-sm text-muted-foreground font-body">
                   {t("onboarding.howItWorks.step3.description")}
                 </p>
               </div>
@@ -77,15 +76,15 @@ export const HowItWorks = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => setIsOpen(false)}
-                className="gap-2"
+                className="ghost-border text-lavender-dim hover:bg-lavender/5 rounded-sm gap-2"
               >
                 <X className="w-4 h-4" />
                 {t("onboarding.howItWorks.close")}
               </Button>
             </div>
-          </CardContent>
+          </div>
         </CollapsibleContent>
       </Collapsible>
-    </Card>
+    </div>
   );
 };
