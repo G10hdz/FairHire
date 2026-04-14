@@ -12,6 +12,7 @@ import { PayGapCard } from "@/components/PayGapCard";
 import { SalaryTipsCard } from "@/components/SalaryTipsCard";
 import { CoverLetterCard } from "@/components/CoverLetterCard";
 import { LanguageToggle } from "@/components/LanguageToggle/LanguageToggle";
+import { ApiKeyInput } from "@/components/ApiKeyInput";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { HowItWorks } from "@/components/HowItWorks";
 import { AlertTriangle, ClipboardList, FileText, Sparkles, ArrowLeft } from "lucide-react";
@@ -33,6 +34,24 @@ const Index = () => {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const { toast } = useToast();
   const { t, i18n } = useTranslation();
+
+  // BYOK API key state
+  const [userApiKey, setUserApiKey] = useState(() => {
+    return localStorage.getItem("fairhire-api-key") || "";
+  });
+
+  const handleApiKeyChange = (key: string) => {
+    setUserApiKey(key);
+    if (key) {
+      localStorage.setItem("fairhire-api-key", key);
+      toast({
+        title: "API key saved",
+        description: "Your key will be used for all analysis requests.",
+      });
+    } else {
+      localStorage.removeItem("fairhire-api-key");
+    }
+  };
 
   // Show onboarding on first visit
   useEffect(() => {
@@ -125,7 +144,13 @@ const Index = () => {
           <h1 className="font-orbitron text-xl font-bold tracking-[0.15em] uppercase text-lavender">
             {t("app.name")}
           </h1>
-          <LanguageToggle />
+          <div className="flex items-center gap-3">
+            <ApiKeyInput
+              onKeyChange={handleApiKeyChange}
+              hasKey={!!userApiKey}
+            />
+            <LanguageToggle />
+          </div>
         </div>
       </nav>
 

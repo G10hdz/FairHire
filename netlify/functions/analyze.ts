@@ -8,7 +8,7 @@ const MAX_INPUT_LENGTH = 10000;
 const CORS_HEADERS = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "Content-Type"
+  "Access-Control-Allow-Headers": "Content-Type, X-Anthropic-Key"
 };
 
 // System prompts in both languages
@@ -168,7 +168,8 @@ const handler: Handler = async (event) => {
       };
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    // 🔴 BYOK: use user-provided key if present, fall back to server key
+    const apiKey = event.headers["x-anthropic-key"] || process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
       return {
         statusCode: 500,

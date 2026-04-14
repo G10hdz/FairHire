@@ -10,17 +10,29 @@ export interface AnalysisResult {
   coverLetter: string;
 }
 
+/** Get user-provided API key from localStorage if set */
+function getUserApiKey(): string | null {
+  return localStorage.getItem('fairhire-api-key');
+}
+
 export async function analyzeJobFitWithClaude(
   jobDescription: string,
   cvText: string,
   language: string = 'es'
 ): Promise<AnalysisResult> {
+  const userKey = getUserApiKey();
+
   const makeRequest = async (): Promise<AnalysisResult> => {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (userKey) {
+      headers['X-Anthropic-Key'] = userKey;
+    }
+
     const response = await fetch('/api/analyze', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({
         jobDescription,
         cvText,

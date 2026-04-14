@@ -124,7 +124,7 @@ Response:
 - [x] **Onboarding:** Modal guiado para nuevas usuarias.
 - [x] **Deploy dual:** Netlify (primario) + Vercel (espejo).
 - [x] **Rediseño Positronica:** Glassmorphism, dot grid, Orbitron + Space Grotesk, "no-line" borders.
-- [ ] **Bring Your Own Key (BYOK):** Permitir a las usuarias ingresar su propia API Key de Anthropic.
+- [x] **Bring Your Own Key (BYOK):** Toggle en el nav para usar tu propia API key de Anthropic.
 
 ---
 
@@ -240,7 +240,7 @@ Response:
 - [x] **Onboarding:** Guided modal for first-time users.
 - [x] **Dual Deploy:** Netlify (primary) + Vercel (mirror).
 - [x] **Positronica Redesign:** Glassmorphism, dot grid, Orbitron + Space Grotesk, "no-line" borders.
-- [ ] **Bring Your Own Key (BYOK):** Allow users to enter their own Anthropic API Key.
+- [x] **Bring Your Own Key (BYOK):** Nav toggle to use your own Anthropic API key.
 
 ---
 *Made with 💜 to help close the gender gap in tech.*
