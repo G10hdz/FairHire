@@ -40,3 +40,7 @@ Untitled*/
 QWEN.md
 deno.lock
 .vercel
+.qwen/
+.aider*
+.cocoindex_code/
+graphify-out/
