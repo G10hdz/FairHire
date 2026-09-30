@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FairHire — architecture</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #f5f5f5;
+      --color-ink:     #2d3142;
+      --color-muted:   #4f5d75;
+      --color-accent:  #eb6c36;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1100px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--color-muted); margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400; letter-spacing: -0.02em; line-height: 1.15;
+      margin-bottom: 0.4rem;
+    }
+    .sub { color: var(--color-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    svg { width: 100%; display: block; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Architecture · Diagram Design</p>
+    <h1>FairHire — salary-gap analyzer</h1>
+    <p class="sub">React SPA → serverless analyze function → Claude + INEGI benchmarks. Netlify is source of truth; Vercel is a mirror.</p>
+
+    <svg viewBox="0 0 1100 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fh-title fh-desc">
+      <title id="fh-title">FairHire: analyzer request flow</title>
+      <desc id="fh-desc">El frontend React llama claude-analyzer.ts que postea a /api/analyze; la funcion Netlify carga salary_benchmarks.json de INEGI y llama Anthropic claude-sonnet-4; regresa fitScore, missingSkills, payGapContext, salaryNegotiationTips y coverLetter; inegi-benchmark.ts sirve los datos y React Query los cachea 7 dias; api/ espejo en Vercel.</desc>
+      <defs>
+        <marker id="fh-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+        <marker id="fh-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+      </defs>
+
+      <rect width="1100" height="470" fill="#f5f5f5"/>
+
+      <!-- frontend -->
+      <rect x="40" y="60" width="300" height="250" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="4,4"/>
+      <text x="190" y="84" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">REACT 18 + VITE SPA</text>
+      <rect x="60" y="100" width="260" height="44" rx="4" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="0.9"/>
+      <text x="190" y="118" fill="#2d3142" font-size="10.5" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">pages/Index.tsx</text>
+      <text x="190" y="134" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace" text-anchor="middle">form + result cards · onboarding modal</text>
+      <rect x="60" y="152" width="260" height="40" rx="4" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="0.8"/>
+      <text x="190" y="168" fill="#2d3142" font-size="10" font-family="'Geist Mono', monospace" text-anchor="middle">lib/claude-analyzer.ts</text>
+      <text x="190" y="184" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace" text-anchor="middle">retryWithBackoff → 529 overload</text>
+      <rect x="60" y="200" width="260" height="40" rx="4" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="0.8"/>
+      <text x="190" y="216" fill="#2d3142" font-size="10" font-family="'Geist Mono', monospace" text-anchor="middle">useSalaryBenchmark (React Query)</text>
+      <text x="190" y="232" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace" text-anchor="middle">cache 7d · SalaryBenchmark lazy</text>
+      <rect x="60" y="248" width="260" height="40" rx="4" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="0.8"/>
+      <text x="190" y="264" fill="#2d3142" font-size="10" font-family="'Geist Mono', monospace" text-anchor="middle">i18n.ts → locales/es + en</text>
+      <text x="190" y="280" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace" text-anchor="middle">Clinical Sublime · shadcn + Tailwind</text>
+
+      <!-- serverless -->
+      <rect x="400" y="60" width="330" height="250" rx="8" fill="rgba(235,108,54,0.05)" stroke="rgba(235,108,54,0.35)" stroke-width="1" stroke-dasharray="4,4"/>
+      <text x="565" y="84" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">NETLIFY FUNCTIONS — SOURCE OF TRUTH</text>
+      <rect x="420" y="100" width="290" height="60" rx="4" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="0.8"/>
+      <text x="565" y="124" fill="#2d3142" font-size="10.5" font-weight="600" font-family="'Geist Mono', monospace" text-anchor="middle">analyze.ts — POST /api/analyze</text>
+      <text x="565" y="142" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace" text-anchor="middle">10k char max/field · strip markdown → JSON</text>
+      <rect x="420" y="172" width="290" height="44" rx="4" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="0.8"/>
+      <text x="565" y="190" fill="#2d3142" font-size="10" font-family="'Geist Mono', monospace" text-anchor="middle">inegi-benchmark.ts</text>
+      <text x="565" y="206" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace" text-anchor="middle">data/salary_benchmarks.json</text>
+      <rect x="420" y="226" width="290" height="64" rx="4" fill="rgba(79,93,117,0.06)" stroke="#7a8399" stroke-width="1"/>
+      <text x="565" y="246" fill="#2d3142" font-size="10.5" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">api/ — Vercel mirror</text>
+      <text x="565" y="264" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace" text-anchor="middle">analyze.ts + inegi-benchmark.ts</text>
+      <text x="565" y="280" fill="#4f5d75" font-size="8.5" font-family="'Geist Mono', monospace" text-anchor="middle">mantener ambos en sync</text>
+
+      <!-- anthropic -->
+      <rect x="790" y="80" width="280" height="70" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.2"/>
+      <text x="930" y="108" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Anthropic API</text>
+      <text x="930" y="128" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">claude-sonnet-4 · max_tokens 2000</text>
+
+      <!-- result -->
+      <rect x="790" y="180" width="280" height="110" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="930" y="204" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">AnalysisResult</text>
+      <text x="930" y="224" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">fitScore · fitSummary · missingSkills</text>
+      <text x="930" y="242" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">payGapContext · salaryNegotiationTips</text>
+      <text x="930" y="258" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">coverLetter</text>
+      <text x="930" y="278" fill="#7a8399" font-size="8.5" font-family="'Geist Mono', monospace" text-anchor="middle">ES/EN segun language</text>
+
+      <!-- edges -->
+      <path d="M 340 170 L 400 140" fill="none" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#fh-arrow-accent)"/>
+      <text x="355" y="150" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">POST</text>
+      <path d="M 340 220 L 400 200" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#fh-arrow)"/>
+      <text x="352" y="204" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">benchmark</text>
+      <path d="M 730 130 L 790 118" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#fh-arrow)"/>
+      <path d="M 790 220 L 730 160" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#fh-arrow)"/>
+
+      <!-- deploy -->
+      <rect x="40" y="340" width="1020" height="56" rx="6" fill="rgba(45,49,66,0.05)" stroke="rgba(45,49,66,0.32)" stroke-width="0.8"/>
+      <text x="550" y="364" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Deploy: Netlify desde main (fairfit-ai.netlify.app) · espejo Vercel (fairhire-sigma.vercel.app)</text>
+      <text x="550" y="384" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">no push directo a main — cada push dispara build y consume creditos · trabajar en rama</text>
+    </svg>
+  </div>
+</body>
+</html>
