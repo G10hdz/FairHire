@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 640" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <rect width="560" height="640" fill="#15141B"/>
+
+  <defs><marker id="arr" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#B9A6E3"/></marker>
+  <marker id="arrO" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#E0A94F"/></marker></defs>
+
+  <!-- edges main -->
+  <g stroke="#B9A6E3" stroke-width="2.5" fill="none" marker-end="url(#arr)">
+    <line x1="185" y1="88" x2="185" y2="114"/>
+    <line x1="185" y1="192" x2="185" y2="218"/>
+    <line x1="185" y1="294" x2="185" y2="320"/>
+    <line x1="185" y1="402" x2="185" y2="428"/>
+    <line x1="185" y1="500" x2="185" y2="526"/>
+  </g>
+  <!-- edges branch -->
+  <g stroke="#E0A94F" stroke-width="2.5" fill="none">
+    <path d="M330 155 C 400 155 410 190 430 214" marker-end="url(#arrO)"/>
+    <line x1="450" y1="280" x2="450" y2="316" marker-end="url(#arrO)"/>
+    <path d="M420 372 C 380 420 360 480 322 528" marker-end="url(#arrO)"/>
+  </g>
+
+  <!-- 1: usuaria -->
+  <rect x="40" y="24" width="290" height="64" rx="12" fill="#26203A" stroke="#B9A6E3" stroke-width="1.5"/>
+  <text x="185" y="52" text-anchor="middle" font-size="24" font-weight="700" fill="#E8E4F5">User</text>
+  <text x="185" y="76" text-anchor="middle" font-size="18" fill="#C9C5D8">job post + CV + her API key</text>
+
+  <!-- 2: app react -->
+  <rect x="40" y="118" width="290" height="74" rx="12" fill="#1D1A28" stroke="#B9A6E3" stroke-width="1.5"/>
+  <text x="185" y="148" text-anchor="middle" font-size="24" font-weight="700" fill="#E8E4F5">App React</text>
+  <text x="185" y="174" text-anchor="middle" font-size="18" fill="#C9C5D8">Index.tsx + ApiKeyInput</text>
+
+  <!-- 3: analyzer client -->
+  <rect x="40" y="218" width="290" height="76" rx="12" fill="#1D1A28" stroke="#B9A6E3" stroke-width="1.5"/>
+  <text x="185" y="248" text-anchor="middle" font-size="24" font-weight="700" fill="#E8E4F5">claude-analyzer.ts</text>
+  <text x="185" y="274" text-anchor="middle" font-size="18" fill="#C9C5D8">POST /api/analyze con</text>
+  <text x="185" y="290" text-anchor="middle" font-size="16" fill="#C9C5D8">header X-Anthropic-Key</text>
+
+  <!-- 4: function -->
+  <rect x="40" y="320" width="290" height="82" rx="12" fill="#1D1A28" stroke="#B9A6E3" stroke-width="1.5"/>
+  <text x="185" y="350" text-anchor="middle" font-size="24" font-weight="700" fill="#E8E4F5">functions/analyze.ts</text>
+  <text x="185" y="376" text-anchor="middle" font-size="18" fill="#C9C5D8">401 if key is missing</text>
+  <text x="185" y="394" text-anchor="middle" font-size="16" fill="#C9C5D8">mirror: api/analyze.ts</text>
+
+  <!-- 5: anthropic -->
+  <rect x="40" y="428" width="290" height="72" rx="12" fill="#26203A" stroke="#B9A6E3" stroke-width="1.5"/>
+  <text x="185" y="458" text-anchor="middle" font-size="24" font-weight="700" fill="#E8E4F5">Anthropic API</text>
+  <text x="185" y="484" text-anchor="middle" font-size="18" fill="#C9C5D8">Claude Sonnet (BYOK)</text>
+
+  <!-- 6: resultados -->
+  <rect x="40" y="526" width="290" height="90" rx="12" fill="#1D1A28" stroke="#B9A6E3" stroke-width="1.5"/>
+  <text x="185" y="556" text-anchor="middle" font-size="24" font-weight="700" fill="#E8E4F5">Result cards</text>
+  <text x="185" y="582" text-anchor="middle" font-size="18" fill="#C9C5D8">FitScore · Skills · Pay gap</text>
+  <text x="185" y="604" text-anchor="middle" font-size="18" fill="#C9C5D8">Tips · Cover letter</text>
+
+  <!-- 7: inegi benchmark -->
+  <rect x="360" y="218" width="180" height="62" rx="12" fill="#2E2415" stroke="#E0A94F" stroke-width="1.5"/>
+  <text x="450" y="244" text-anchor="middle" font-size="20" font-weight="700" fill="#F0C98A">inegi-benchmark</text>
+  <text x="450" y="266" text-anchor="middle" font-size="18" fill="#F0C98A">GET wage base</text>
+
+  <!-- 8: json -->
+  <rect x="360" y="316" width="180" height="56" rx="12" fill="#2E2415" stroke="#E0A94F" stroke-width="1.5"/>
+  <text x="450" y="340" text-anchor="middle" font-size="18" font-weight="700" fill="#F0C98A">salary_benchmarks</text>
+  <text x="450" y="362" text-anchor="middle" font-size="18" fill="#F0C98A">INEGI ENOE</text>
+</svg>
