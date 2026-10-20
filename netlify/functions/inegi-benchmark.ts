@@ -88,12 +88,26 @@ export interface BenchmarkResponse {
   isMock?: boolean;
 }
 
-const CORS_HEADERS = {
-  "Content-Type": "application/json",
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
+// CORS: solo producción, deploy previews de Netlify y dev local.
+// Orígenes extra se agregan con ALLOWED_ORIGINS (lista separada por comas).
+const ALLOWED_ORIGINS = new Set(
+  (process.env.ALLOWED_ORIGINS ||
+    "https://fairfit-ai.netlify.app,http://localhost:8081,http://localhost:8888")
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean),
+);
+
+function corsHeaders(origin: string | undefined): Record<string, string> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (origin && (ALLOWED_ORIGINS.has(origin) || origin.endsWith("--fairfit-ai.netlify.app"))) {
+    headers["Access-Control-Allow-Origin"] = origin;
+    headers["Access-Control-Allow-Methods"] = "GET, OPTIONS";
+    headers["Access-Control-Allow-Headers"] = "Content-Type";
+    headers["Vary"] = "Origin";
+  }
+  return headers;
+}
 
 const CACHE_HEADERS = {
   "Cache-Control": "public, max-age=604800", // 7 days
@@ -130,18 +144,19 @@ function calculateSampleSufficient(division: string, data: BenchmarkData): boole
 }
 
 const handler: Handler = async (event) => {
+  const cors = corsHeaders(event.headers?.origin);
   if (event.httpMethod === "OPTIONS") {
-    return { 
-      statusCode: 204, 
-      headers: CORS_HEADERS, 
-      body: "" 
+    return {
+      statusCode: 204,
+      headers: cors,
+      body: ""
     };
   }
 
   if (event.httpMethod !== "GET") {
     return { 
       statusCode: 405, 
-      headers: CORS_HEADERS, 
+      headers: cors, 
       body: JSON.stringify({ error: "Method Not Allowed" }) 
     };
   }
@@ -223,14 +238,14 @@ const handler: Handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: { ...CORS_HEADERS, ...CACHE_HEADERS },
+      headers: { ...cors, ...CACHE_HEADERS },
       body: JSON.stringify(response)
     };
   } catch (error) {
     console.error("INEGI Benchmark error:", error);
     return {
       statusCode: 500,
-      headers: CORS_HEADERS,
+      headers: cors,
       body: JSON.stringify({ 
         error: "Error processing INEGI benchmark data",
         message: error instanceof Error ? error.message : "Unknown error"

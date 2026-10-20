@@ -5,11 +5,25 @@ import { join } from "path";
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-20250514";
 const MAX_INPUT_LENGTH = 10000;
 
-const CORS_HEADERS = {
-  "Content-Type": "application/json",
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "Content-Type, X-Anthropic-Key"
-};
+// CORS: solo producción, deploy previews de Netlify y dev local.
+// Orígenes extra se agregan con ALLOWED_ORIGINS (lista separada por comas).
+const ALLOWED_ORIGINS = new Set(
+  (process.env.ALLOWED_ORIGINS ||
+    "https://fairfit-ai.netlify.app,http://localhost:8081,http://localhost:8888")
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean),
+);
+
+function corsHeaders(origin: string | undefined): Record<string, string> {
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (origin && (ALLOWED_ORIGINS.has(origin) || origin.endsWith("--fairfit-ai.netlify.app"))) {
+    headers["Access-Control-Allow-Origin"] = origin;
+    headers["Access-Control-Allow-Headers"] = "Content-Type, X-Anthropic-Key";
+    headers["Vary"] = "Origin";
+  }
+  return headers;
+}
 
 // System prompts in both languages
 const SYSTEM_PROMPTS = {
@@ -135,8 +149,9 @@ Cuando analices el fit laboral, considera si el salario ofrecido está en línea
 }
 
 const handler: Handler = async (event) => {
+  const cors = corsHeaders(event.headers?.origin);
   if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 204, headers: CORS_HEADERS, body: "" };
+    return { statusCode: 204, headers: cors, body: "" };
   }
 
   if (event.httpMethod !== "POST") {
@@ -152,7 +167,7 @@ const handler: Handler = async (event) => {
     if (!jobDescription || !cvText) {
       return {
         statusCode: 400,
-        headers: CORS_HEADERS,
+        headers: cors,
         body: JSON.stringify({ error: "Missing jobDescription or cvText" }),
       };
     }
@@ -161,7 +176,7 @@ const handler: Handler = async (event) => {
     if (jobDescription.length > MAX_INPUT_LENGTH || cvText.length > MAX_INPUT_LENGTH) {
       return {
         statusCode: 400,
-        headers: CORS_HEADERS,
+        headers: cors,
         body: JSON.stringify({
           error: `Input too long. Maximum ${MAX_INPUT_LENGTH} characters per field.`,
         }),
@@ -173,7 +188,7 @@ const handler: Handler = async (event) => {
     if (!apiKey) {
       return {
         statusCode: 401,
-        headers: CORS_HEADERS,
+        headers: cors,
         body: JSON.stringify({ error: "Bring your own Anthropic API key (X-Anthropic-Key header)" }),
       };
     }
@@ -215,14 +230,14 @@ const handler: Handler = async (event) => {
       if (response.status === 429) {
         return {
           statusCode: 429,
-          headers: CORS_HEADERS,
+          headers: cors,
           body: JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
         };
       }
 
       return {
         statusCode: response.status,
-        headers: CORS_HEADERS,
+        headers: cors,
         body: JSON.stringify({ error: `AI API error: ${response.status}` }),
       };
     }
@@ -233,7 +248,7 @@ const handler: Handler = async (event) => {
       console.error("Invalid API response structure:", data);
       return {
         statusCode: 500,
-        headers: CORS_HEADERS,
+        headers: cors,
         body: JSON.stringify({ error: "Invalid response from AI service" }),
       };
     }
@@ -243,7 +258,7 @@ const handler: Handler = async (event) => {
       console.error("Invalid content structure:", firstContent);
       return {
         statusCode: 500,
-        headers: CORS_HEADERS,
+        headers: cors,
         body: JSON.stringify({ error: "Invalid content format from AI service" }),
       };
     }
@@ -261,14 +276,14 @@ const handler: Handler = async (event) => {
       console.error("Model returned invalid JSON:", rawText);
       return {
         statusCode: 500,
-        headers: CORS_HEADERS,
+        headers: cors,
         body: JSON.stringify({ error: "Error al procesar la respuesta. Intenta de nuevo." }),
       };
     }
 
     return {
       statusCode: 200,
-      headers: CORS_HEADERS,
+      headers: cors,
       body: cleanJson,
     };
   } catch (error) {
@@ -276,7 +291,7 @@ const handler: Handler = async (event) => {
     console.error("Analysis error:", errorMessage);
     return {
       statusCode: 500,
-      headers: CORS_HEADERS,
+      headers: cors,
       body: JSON.stringify({ error: "Analysis failed" }),
     };
   }
