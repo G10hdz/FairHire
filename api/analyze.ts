@@ -5,11 +5,23 @@ import { join } from "path";
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-20250514";
 const MAX_INPUT_LENGTH = 10000;
 
-const CORS_HEADERS = {
-  "Content-Type": "application/json",
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "Content-Type, X-Anthropic-Key"
-};
+// CORS: solo producción, deploy previews de Netlify y dev local.
+// Orígenes extra se agregan con ALLOWED_ORIGINS (lista separada por comas).
+const ALLOWED_ORIGINS = new Set(
+  (process.env.ALLOWED_ORIGINS ||
+    "https://fairfit-ai.netlify.app,http://localhost:8081,http://localhost:8888")
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean),
+);
+
+function setCors(res: VercelResponse, origin: string | undefined) {
+  if (origin && (ALLOWED_ORIGINS.has(origin) || origin.endsWith("--fairfit-ai.netlify.app"))) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Anthropic-Key");
+    res.setHeader("Vary", "Origin");
+  }
+}
 
 // System prompts in both languages
 const SYSTEM_PROMPTS = {
@@ -135,9 +147,10 @@ Cuando analices el fit laboral, considera si el salario ofrecido está en línea
 }
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
+  setCors(res, req.headers.origin as string | undefined);
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
-    return res.status(204).setHeader("Access-Control-Allow-Origin", "*").setHeader("Access-Control-Allow-Headers", "Content-Type, X-Anthropic-Key").send("");
+    return res.status(204).send("");
   }
 
   if (req.method !== "POST") {
@@ -152,12 +165,12 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       const validLanguage = (language === 'es' || language === 'en') ? language : 'es';
 
       if (!jobDescription || !cvText) {
-        return res.status(400).setHeader("Access-Control-Allow-Origin", "*").json({ error: "Missing jobDescription or cvText" });
+        return res.status(400).json({ error: "Missing jobDescription or cvText" });
       }
 
       // 🔴 Fix 1: límite de input para evitar quema de créditos
       if (jobDescription.length > MAX_INPUT_LENGTH || cvText.length > MAX_INPUT_LENGTH) {
-        return res.status(400).setHeader("Access-Control-Allow-Origin", "*").json({
+        return res.status(400).json({
           error: `Input too long. Maximum ${MAX_INPUT_LENGTH} characters per field.`,
         });
       }
@@ -165,7 +178,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       // BYOK: la key siempre la pone el usuario; el servidor no guarda una
       const apiKey = req.headers["x-anthropic-key"] as string | undefined;
       if (!apiKey) {
-        return res.status(401).setHeader("Access-Control-Allow-Origin", "*").json({ error: "Bring your own Anthropic API key (X-Anthropic-Key header)" });
+        return res.status(401).json({ error: "Bring your own Anthropic API key (X-Anthropic-Key header)" });
       }
 
       // Build system prompt with INEGI context
@@ -203,23 +216,23 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         console.error("Anthropic API error:", response.status, errorBody);
 
         if (response.status === 429) {
-          return res.status(429).setHeader("Access-Control-Allow-Origin", "*").json({ error: "Rate limit exceeded. Please try again later." });
+          return res.status(429).json({ error: "Rate limit exceeded. Please try again later." });
         }
 
-        return res.status(response.status).setHeader("Access-Control-Allow-Origin", "*").json({ error: `AI API error: ${response.status}` });
+        return res.status(response.status).json({ error: `AI API error: ${response.status}` });
       }
 
       const data = await response.json();
 
       if (!data?.content || !Array.isArray(data.content) || data.content.length === 0) {
         console.error("Invalid API response structure:", data);
-        return res.status(500).setHeader("Access-Control-Allow-Origin", "*").json({ error: "Invalid response from AI service" });
+        return res.status(500).json({ error: "Invalid response from AI service" });
       }
 
       const firstContent = data.content[0];
       if (!firstContent || typeof firstContent.text !== "string") {
         console.error("Invalid content structure:", firstContent);
-        return res.status(500).setHeader("Access-Control-Allow-Origin", "*").json({ error: "Invalid content format from AI service" });
+        return res.status(500).json({ error: "Invalid content format from AI service" });
       }
 
       const rawText = firstContent.text;
@@ -233,14 +246,14 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         JSON.parse(cleanJson);
       } catch {
         console.error("Model returned invalid JSON:", rawText);
-        return res.status(500).setHeader("Access-Control-Allow-Origin", "*").json({ error: "Error al procesar la respuesta. Intenta de nuevo." });
+        return res.status(500).json({ error: "Error al procesar la respuesta. Intenta de nuevo." });
       }
 
-      return res.status(200).setHeader("Access-Control-Allow-Origin", "*").send(cleanJson);
+      return res.status(200).send(cleanJson);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       console.error("Analysis error:", errorMessage);
-      return res.status(500).setHeader("Access-Control-Allow-Origin", "*").json({ error: "Analysis failed" });
+      return res.status(500).json({ error: "Analysis failed" });
     }
   })();
 }

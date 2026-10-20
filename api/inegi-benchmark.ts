@@ -88,12 +88,24 @@ export interface BenchmarkResponse {
   isMock?: boolean;
 }
 
-const CORS_HEADERS = {
-  "Content-Type": "application/json",
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
+// CORS: solo producción, deploy previews de Netlify y dev local.
+// Orígenes extra se agregan con ALLOWED_ORIGINS (lista separada por comas).
+const ALLOWED_ORIGINS = new Set(
+  (process.env.ALLOWED_ORIGINS ||
+    "https://fairfit-ai.netlify.app,http://localhost:8081,http://localhost:8888")
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean),
+);
+
+function setCors(res: VercelResponse, origin: string | undefined) {
+  if (origin && (ALLOWED_ORIGINS.has(origin) || origin.endsWith("--fairfit-ai.netlify.app"))) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Vary", "Origin");
+  }
+}
 
 const CACHE_HEADERS = {
   "Cache-Control": "public, max-age=604800", // 7 days
@@ -130,13 +142,14 @@ function calculateSampleSufficient(division: string, data: BenchmarkData): boole
 }
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
+  setCors(res, req.headers.origin as string | undefined);
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
-    return res.status(204).setHeader("Access-Control-Allow-Origin", "*").send("");
+    return res.status(204).send("");
   }
 
   if (req.method !== "GET") {
-    return res.status(405).setHeader("Access-Control-Allow-Origin", "*").json({ error: "Method Not Allowed" });
+    return res.status(405).json({ error: "Method Not Allowed" });
   }
 
   try {
@@ -214,10 +227,10 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-    return res.status(200).setHeader("Access-Control-Allow-Origin", "*").setHeader("Cache-Control", "public, max-age=604800").json(response);
+    return res.status(200).setHeader("Cache-Control", "public, max-age=604800").json(response);
   } catch (error) {
     console.error("INEGI Benchmark error:", error);
-    return res.status(500).setHeader("Access-Control-Allow-Origin", "*").json({
+    return res.status(500).json({
       error: "Error processing INEGI benchmark data",
       message: error instanceof Error ? error.message : "Unknown error"
     });
