@@ -42,7 +42,7 @@ describe("MissingSkillsCard", () => {
     const skills = ["React"];
     const { container } = render(<MissingSkillsCard skills={skills} />);
     
-    const badge = container.querySelector('[class*="border-secondary"]');
+    const badge = container.querySelector('[class*="skill-badge"]');
     expect(badge).toBeInTheDocument();
   });
 });
