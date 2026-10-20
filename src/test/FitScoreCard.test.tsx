@@ -24,7 +24,7 @@ describe("FitScoreCard", () => {
       <FitScoreCard score={85} summary="Excelente fit" />
     );
     
-    const scoreElement = container.querySelector(".text-green-600");
+    const scoreElement = container.querySelector('[class*="3A644C"]');
     expect(scoreElement).toBeInTheDocument();
   });
 

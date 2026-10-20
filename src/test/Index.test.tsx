@@ -48,9 +48,9 @@ describe("Index Page", () => {
     render(<Index />);
 
     expect(screen.getByText("FairHire")).toBeInTheDocument();
-    // Tagline in header (not the badge)
-    const header = screen.getByRole("banner");
-    expect(header.querySelector("p")?.textContent).toMatch(/Empowering women in tech|Empoderando a mujeres en tech/i);
+    // La barra superior es un nav desde el rediseño
+    const nav = screen.getByRole("navigation");
+    expect(nav.querySelector("h1")?.textContent).toBe("FairHire");
   });
 
   it("shows input fields for job description and CV", () => {
@@ -204,7 +204,7 @@ describe("Index Page", () => {
     }, { timeout: 2000 });
 
     // Click "Nuevo análisis" or "New analysis" button
-    const newAnalysisButton = screen.getByText(/← Nuevo análisis|← New analysis/i);
+    const newAnalysisButton = screen.getByText(/Nuevo análisis|New analysis/i);
     fireEvent.click(newAnalysisButton);
 
     // Should return to input form
