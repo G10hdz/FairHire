@@ -8,7 +8,7 @@ const MAX_INPUT_LENGTH = 10000;
 const CORS_HEADERS = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "Content-Type"
+  "Access-Control-Allow-Headers": "Content-Type, X-Anthropic-Key"
 };
 
 // System prompts in both languages
@@ -137,7 +137,7 @@ Cuando analices el fit laboral, considera si el salario ofrecido está en línea
 export default function handler(req: VercelRequest, res: VercelResponse) {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
-    return res.status(204).setHeader("Access-Control-Allow-Origin", "*").setHeader("Access-Control-Allow-Headers", "Content-Type").send("");
+    return res.status(204).setHeader("Access-Control-Allow-Origin", "*").setHeader("Access-Control-Allow-Headers", "Content-Type, X-Anthropic-Key").send("");
   }
 
   if (req.method !== "POST") {
@@ -162,9 +162,10 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         });
       }
 
-      const apiKey = process.env.ANTHROPIC_API_KEY;
+      // BYOK: la key siempre la pone el usuario; el servidor no guarda una
+      const apiKey = req.headers["x-anthropic-key"] as string | undefined;
       if (!apiKey) {
-        return res.status(500).setHeader("Access-Control-Allow-Origin", "*").json({ error: "Service unavailable. Please try again later." });
+        return res.status(401).setHeader("Access-Control-Allow-Origin", "*").json({ error: "Bring your own Anthropic API key (X-Anthropic-Key header)" });
       }
 
       // Build system prompt with INEGI context

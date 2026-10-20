@@ -168,13 +168,13 @@ const handler: Handler = async (event) => {
       };
     }
 
-    // 🔴 BYOK: use user-provided key if present, fall back to server key
-    const apiKey = event.headers["x-anthropic-key"] || process.env.ANTHROPIC_API_KEY;
+    // BYOK: la key siempre la pone el usuario; el servidor no guarda una
+    const apiKey = event.headers["x-anthropic-key"];
     if (!apiKey) {
       return {
-        statusCode: 500,
+        statusCode: 401,
         headers: CORS_HEADERS,
-        body: JSON.stringify({ error: "Service unavailable. Please try again later." }),
+        body: JSON.stringify({ error: "Bring your own Anthropic API key (X-Anthropic-Key header)" }),
       };
     }
 
