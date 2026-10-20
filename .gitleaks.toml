@@ -1,0 +1,5 @@
+title = "FairHire gitleaks config"
+
+[allowlist]
+description = "pr-whatsapp.yml usa $DOPPLER_TOKEN como variable de entorno; no hay credencial literal"
+paths = ['''\.github/workflows/pr-whatsapp\.yml''']
