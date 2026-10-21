@@ -57,7 +57,8 @@ const Index = () => {
   useEffect(() => {
     const hasSeenOnboarding = localStorage.getItem("fairhire-onboarding-seen");
     if (!hasSeenOnboarding) {
-      setTimeout(() => setShowOnboarding(true), 500);
+      const t = setTimeout(() => setShowOnboarding(true), 500);
+      return () => clearTimeout(t);
     }
   }, []);
 
